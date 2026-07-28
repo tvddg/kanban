@@ -6,6 +6,9 @@ const createJestConfig = nextJest({
 });
 
 const config: Config = {
+  reporters: process.env.CI
+    ? [['github-actions', { silent: false }], 'summary']
+    : ['default'],
   clearMocks: true,
   collectCoverage: true,
   coverageDirectory: "coverage",

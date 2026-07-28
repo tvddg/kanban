@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "jest ./test"
+    "test:unit": "jest ./test",
+    "test:e2e": "playwright test ./e2e",
+    "test:all": "concurrently --kill-others-on-fail \"npm run test:unit\" \"npm run test:e2e\""
   },
   "dependencies": {
     "next": "16.2.11",
@@ -15,6 +17,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.0",
@@ -23,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^10.0.4",
     "eslint": "^9",
     "eslint-config-next": "16.2.11",
     "jest": "^30.4.2",
