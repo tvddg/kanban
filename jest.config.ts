@@ -18,6 +18,9 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/app/$1',
   },
   testEnvironment: "jsdom",
+  testMatch: [ 
+    '<rootDir>/tests/**/*.test.{ts,tsx}', 
+  ]
 };
 
 export default createJestConfig(config);
