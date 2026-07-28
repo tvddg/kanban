@@ -1,12 +1,22 @@
 name: Testing
 
 on:
+    push: 
+        branches: [ main ]
     pull_request:
         branches: [ main ]
 
+permissions:
+    contents: read
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-    tests:
-        name: Run tests
+    e2e:
+        timeout-minutes: 20
+        name: Run e2e-tests
         runs-on: ubuntu-latest
         
         steps:
@@ -16,11 +26,54 @@ jobs:
           - name: Setup Node.js
             uses: actions/setup-node@v7
             with:
-                node-version: 'latest'
+                node-version-file: '.nvmrc'
                 cache: 'npm'
 
           - name: Install dependencies
             run: npm ci
+
+          - name: Install Playwright Browsers
+            run: npx playwright install --with-deps chromium
           
           - name: Run tests
-            run: npm run test
+            id: e2e-tests
+            run: npm run test:e2e -- --reporter=html,github
+
+          - name: Upload report
+            uses: actions/upload-artifact@v7
+            if: ${{ !cancelled() && steps.e2e-tests.conclusion != 'skipped' }}
+            with:
+                name: e2e-report
+                path: e2e/
+                retention-days: 15 
+                if-no-files-found: error
+    unit:
+        timeout-minutes: 10
+        name: Run unit-tests
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v7
+
+          - name: Setup Node.js
+            uses: actions/setup-node@v7
+            with:
+                node-version-file: '.nvmrc'
+                cache: 'npm'
+
+          - name: Install dependencies
+            run: npm ci
+
+          - name: Run tests
+            id: unit-tests
+            run: npm run test:unit -- --ci --coverage
+
+          - name: Upload coverage
+            uses: actions/upload-artifact@v7
+            if: ${{ !cancelled() && steps.unit-tests.conclusion != 'skipped' }}
+            with: 
+                name: coverage-report
+                path: coverage/
+                retention-days: 10
+                if-no-files-found: error
