@@ -32,6 +32,22 @@ jobs:
 
             - name: Build
               run: npm run build
+
+            - name: Debug File System
+              run: |
+                echo "PWD:"
+                pwd
+                
+                echo "Root folder content:"
+                ls -la
+                
+                echo "Search next folder:"
+                if [ -d ".next" ]; then
+                echo "Folder found"
+                ls -la .next/
+                else
+                echo "!Folder does not exist!"
+                fi
             
             - name: Upload build
               uses: actions/upload-artifact@v7
