@@ -55,6 +55,7 @@ jobs:
                 name: build-output
                 path: ${{ github.workspace }}/.next/
                 retention-days: 7
+                include-hidden-files: true
                 if-no-files-found: error
 
     deploy:
