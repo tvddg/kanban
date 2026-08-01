@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Home from "@/page";
+import Home from "../src/app/page";
 
 describe("Home page testing", () => {
     test("displays paragraph correctly", async () => {
