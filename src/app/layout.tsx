@@ -13,9 +13,13 @@ export default function RootLayout({
 }>) {
   return (
     <html
+        className="min-h-full bg-cover bg-center bg-linear-to-br from-cyan-300 to-purple-600 text-white overscroll-none"
       lang="en"
     >
-      <body>{children}</body>
+      <body className="min-h-dvh"
+        >
+            {children}
+        </body>
     </html>
   );
 }
