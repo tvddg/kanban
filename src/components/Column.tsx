@@ -1,10 +1,14 @@
-interface ColumnItem {
+"use client";
+
+import Item from "./Item";
+
+interface IColumnItem {
     name: string;
 }
 
 interface ColumnProps {
     name: string;
-    items: ColumnItem[];
+    items: IColumnItem[];
 }
 
 export default function Column({ name, items }: ColumnProps) {
@@ -16,9 +20,7 @@ export default function Column({ name, items }: ColumnProps) {
                         {
                             items.length > 0 
                             ? items.map(item =>
-                                <p className="border-solid border-2 border-cyan-200 rounded-xl p-4 bg-gray-600 hover:border-cyan-500 hover:scale-103 active:border-cyan-500 active:scale-95 transition duration-200 cursor-pointer">
-                                    {item.name}
-                                </p>
+                                    <Item key={item.name} name={item.name} />
                                 )
                             : <p className="font-medium text-gray-700 self-center">
                                 Nothing here yet
