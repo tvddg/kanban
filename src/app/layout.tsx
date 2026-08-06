@@ -13,10 +13,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-        className="min-h-full bg-cover bg-center bg-linear-to-br from-cyan-300 to-purple-600 text-white overscroll-none"
+        className="min-h-full bg-cover bg-center bg-linear-to-br from-red-400 to-purple-600 text-white overscroll-none"
       lang="en"
     >
-      <body className="min-h-dvh"
+      <body className="max-h-dvh"
         >
             {children}
         </body>
