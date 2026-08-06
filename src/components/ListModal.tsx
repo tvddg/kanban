@@ -3,7 +3,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface ListModalProps {
-    addCard: (name: string) => void;
+    addCard: (title: string, description?: string) => void;
     toggleModal: () => void;
 }
 

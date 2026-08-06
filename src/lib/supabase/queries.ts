@@ -1,11 +1,6 @@
-import type { QueryData } from "@supabase/supabase-js";
 import client from "./client";
-
-const boardQuery = await client
-    .from('boards')
-    .select('*, lists(*, cards(*))');
-
-export type BoardWithLists = QueryData<typeof boardQuery>[number]
+import { BoardWithLists, INewCard } from "@/types";
+import { ListId } from "@/types/brands";
 
 export async function getBoard(boardId: number) {
     const { data, error } = await client
@@ -15,6 +10,21 @@ export async function getBoard(boardId: number) {
         .single();
 
     if (error) throw error;
+
+    return data as BoardWithLists;
+}
+
+export async function addCard(listId: ListId, position: number, title: string, description?: string) {
+    const card: INewCard = {
+        list_id: listId,
+        title,
+        position,
+        description
+    }; 
     
-    return data;
+    const { error } = await client
+        .from('cards')
+        .upsert(card);
+
+    if (error) throw error
 }

@@ -1,35 +1,41 @@
 "use client";
 
-import { ListId } from "@/types/brands";
-import Card, { CardProps } from "./Card";
+import { CardId, ListId } from "@/types/brands";
+import Card from "./Card";
 import { useDroppable } from "@dnd-kit/react";
 import { useState } from "react";
 import ListModal from "./ListModal";
+import { ICard } from "@/types";
 
 export interface ListProps {
     id: ListId;
     name: string;
-    cards: CardProps[];
-    addCard: (name: string) => void;
+    cards: ICard[];
+    handleAddCard: (position: number, title: string,
+        description?: string) => void;
 }
 
-export default function List({ id, name, cards, addCard }: ListProps) {
+export default function List({ id, name, cards, handleAddCard }: ListProps) {
     const { ref } = useDroppable({
         id
     });
 
+    const lowestCardPosition = cards.length === 0 
+        ? 1
+        : cards.at(-1)?.position! / 2.0; 
+
     const [cardModalVisible, setCardModalVisible] = useState(false);
 
     return <div ref={ref} 
-                className="flex flex-col gap-8 ml-4 shrink-0 bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-64 h-fit min-w-fit max-h-1/12">
+                className="flex flex-col gap-8 ml-4 shrink-0 bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-full">
                     <header className="flex shrink-0 rounded-xl h-5">
                         <h2 className="ml-0.5 font-medium">{name}</h2>
                     </header>
-                    <div className="text-xl shrink-0 flex flex-col gap-6 overflow-y-scroll scrollbar-thumb-gray-700">
+                    <div className="text-lg flex flex-col gap-6 scrollbar-thumb-gray-700 shrink grow min-h-0 overflow-auto">
                         {
                             cards.length > 0 
                             ? cards.map(card =>
-                                    <Card key={card.id} name={card.name} listId={id} id={card.id} />
+                                    <Card key={card.id} name={card.title} listId={id} id={card.id as CardId} />
                                 )
                             : <p className="font-medium text-gray-700 self-center">
                                 Nothing here yet
@@ -44,7 +50,7 @@ export default function List({ id, name, cards, addCard }: ListProps) {
                             Add new card
                         </button>
                         : <ListModal 
-                            addCard={(name: string) => addCard(name)}
+                            addCard={(title: string, description?: string) => handleAddCard(lowestCardPosition, title, description)}
                             toggleModal={() => setCardModalVisible(false)}
                         />
                     }
