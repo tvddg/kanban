@@ -6,7 +6,7 @@ export default function NotFound() {
         <h2 className="mt-5 text-3xl text-center max-w-10/12">The page you are trying to access doesn't exist</h2>
         <Link 
             href="/"
-            className="text-xl opacity-45 hover:scale-103 hover:border-b active:scale-95 transition-all duration-200"
+            className="text-xl opacity-45 hover:scale-103 hover:opacity-100 active:scale-95 transition-all duration-200"
         >
             To the home page
         </Link>
