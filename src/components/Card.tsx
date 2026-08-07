@@ -9,9 +9,12 @@ export interface CardProps {
     name: string;
 }
 
-export default function Card({ id, name }: CardProps) {
+export default function Card({ id, listId, name }: CardProps) {
     const { ref } = useDraggable({
-        id
+        id,
+        data: {
+            list_id: listId
+        }
     });
 
     return <span 

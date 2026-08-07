@@ -1,6 +1,6 @@
 import client from "./client";
 import { BoardWithLists, INewCard } from "@/types";
-import { ListId } from "@/types/brands";
+import { CardId, ListId } from "@/types/brands";
 
 export async function getBoard(boardId: number) {
     const { data, error } = await client
@@ -27,4 +27,15 @@ export async function addCard(listId: ListId, position: number, title: string, d
         .upsert(card);
 
     if (error) throw error
+}
+
+export async function moveCard(cardId: CardId, listId: ListId, position: number) {
+    const { error } = await client
+        .from('cards')
+        .update({ 
+            list_id: listId,
+            position 
+        }).eq('id', cardId);
+    
+    if (error) throw error;
 }

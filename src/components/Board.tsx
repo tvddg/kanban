@@ -5,7 +5,7 @@ import List from "./List";
 import { CardId, ListId } from "@/types/brands";
 import { ICard, ListWithCards } from "@/types";
 import { useOptimistic, startTransition, useState } from "react";
-import { addCard, getBoard } from "@/lib/supabase/queries";
+import { addCard, getBoard, moveCard } from "@/lib/supabase/queries";
 
 export type ListAction = {
     type: "ADD_CARD",
@@ -14,6 +14,14 @@ export type ListAction = {
         title: string;
         position: number;
         description?: string
+    }
+} | {
+    type: "MOVE_CARD",
+    payload: {
+        cardId: CardId,
+        sourceListId: ListId,
+        targetListId: ListId,
+        position: number
     }
 }
 
@@ -50,11 +58,53 @@ export default function Board({ id, boardLists }: BoardProps) {
                         ]
                     }
                 ].sort((li1, li2) => li1.position - li2.position);
-            }  
+            } 
+            case "MOVE_CARD": {
+                const { cardId, sourceListId, targetListId, position } = action.payload;
+                let [sourceList, targetList]: ListWithCards[] = [];
+                for (let li of state) {
+                    if (li.id === sourceListId) {
+                        sourceList = li;
+                    }
+                    if (li.id === targetListId) {
+                        targetList = li;
+                    }
+                }
+                if (!sourceList) {
+                    throw new Error(`List ${sourceListId} not found`);
+                } else if (!targetListId) {
+                    throw new Error(`List ${targetListId} not found`);
+                }
+                const oldCard = sourceList.cards.find(c => c.id === cardId);
+                if (oldCard === undefined) {
+                    return state;
+                }
+                const newCard: ICard = {
+                    ...oldCard,
+                    list_id: targetListId,
+                    position
+                }
+
+                return [
+                    ...state.filter(li => li.id !== sourceListId && li.id !== targetListId),
+                    {
+                        ...sourceList,
+                        cards: sourceList.cards.filter(c => c.id !== oldCard.id)
+                    },
+                    {
+                        ...targetList,
+                        cards: [
+                            ...targetList.cards,
+                            newCard
+                        ].sort((c1, c2) => c2.position - c1.position)
+                    }
+                ].sort((li1, li2) => li1.position - li2.position);
+            }
+            default: 
+                return state; 
         }
     });
 
-    // TODO pass down to list components
     const handleAddCard = (listId: ListId, position: number, title: string, description?: string) => {
         startTransition(async () => {
             dispatch({
@@ -66,23 +116,46 @@ export default function Board({ id, boardLists }: BoardProps) {
                     description
                 }
             });
+            
             await addCard(
                 listId,
                 position,
                 title,
                 description
             );
-            const newLists = (await getBoard(id)).lists;
-            setLists(newLists);
+            setLists((await getBoard(id)).lists);
         });
     }
+
+    const handleMoveCard = (cardId: CardId, sourceListId: ListId, targetListId: ListId, position: number) => {
+        startTransition(async () => {
+            dispatch({
+                type: "MOVE_CARD",
+                payload: {
+                    cardId,
+                    sourceListId,
+                    targetListId,
+                    position
+                }
+            });
+
+            await moveCard(cardId, targetListId, position);
+            setLists((await getBoard(id)).lists)
+        });
+    };
 
     return <div className="pt-8 flex flex-col justify-start min-h-0 h-212">
                 <DragDropProvider
                     onDragEnd={(e) => {
                         if (e.canceled) 
                             return;
-                        // TODO optimistic UI update with supabase request
+                        const cardId = e.operation.source?.id as CardId;
+                        const sourceListId = e.operation.source?.data.list_id;
+                        const targetListId = e.operation.target?.id as ListId;
+                        const position = 1; // TODO
+                        if (sourceListId === targetListId)
+                            return;
+                        handleMoveCard(cardId, sourceListId, targetListId, position);
                     }}
                 >
                     <section className="flex items-start text-2xl min-h-0 max-h-dvh overflow-x-scroll scrollbar-none content-start">

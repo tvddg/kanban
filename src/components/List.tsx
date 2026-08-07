@@ -1,6 +1,6 @@
 "use client";
 
-import { CardId, ListId } from "@/types/brands";
+import { ListId } from "@/types/brands";
 import Card from "./Card";
 import { useDroppable } from "@dnd-kit/react";
 import { useState } from "react";
@@ -20,7 +20,7 @@ export default function List({ id, name, cards, handleAddCard }: ListProps) {
         id
     });
 
-    const lowestCardPosition = cards.length === 0 
+    const cardPosition = cards.length === 0 
         ? 1
         : cards.at(-1)?.position! / 2.0; 
 
@@ -35,7 +35,7 @@ export default function List({ id, name, cards, handleAddCard }: ListProps) {
                         {
                             cards.length > 0 
                             ? cards.map(card =>
-                                    <Card key={card.id} name={card.title} listId={id} id={card.id as CardId} />
+                                    <Card key={card.id} name={card.title} listId={id} id={card.id} />
                                 )
                             : <p className="font-medium text-gray-700 self-center">
                                 Nothing here yet
@@ -50,7 +50,7 @@ export default function List({ id, name, cards, handleAddCard }: ListProps) {
                             Add new card
                         </button>
                         : <ListModal 
-                            addCard={(title: string, description?: string) => handleAddCard(lowestCardPosition, title, description)}
+                            addCard={(title: string, description?: string) => handleAddCard(cardPosition, title, description)}
                             toggleModal={() => setCardModalVisible(false)}
                         />
                     }
