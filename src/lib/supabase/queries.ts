@@ -9,7 +9,8 @@ export async function getBoard(boardId: number) {
         .eq('id', boardId)
         .single();
 
-    if (error) throw error;
+    if (error) 
+        throw new Error(error.message);
 
     return data as BoardWithLists;
 }
@@ -26,7 +27,8 @@ export async function addCard(listId: ListId, position: number, title: string, d
         .from('cards')
         .upsert(card);
 
-    if (error) throw error
+    if (error) 
+        throw new Error(error.message);
 }
 
 export async function moveCard(cardId: CardId, listId: ListId, position: number) {
@@ -37,5 +39,6 @@ export async function moveCard(cardId: CardId, listId: ListId, position: number)
             position 
         }).eq('id', cardId);
     
-    if (error) throw error;
+    if (error) 
+        throw new Error(error.message);
 }
