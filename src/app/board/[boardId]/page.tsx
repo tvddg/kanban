@@ -11,6 +11,7 @@ import { notFound } from "next/navigation";
 
 import Board from "@/components/Board";
 import { getBoard } from "@/lib/supabase/queries";
+import Header from "@/components/UI/header/header";
 
 interface BoardRouterProps {
     params: Promise<{
@@ -24,5 +25,8 @@ export default async function BoardRouter({ params }: BoardRouterProps) {
         notFound();
     const board = await getBoard(boardId);
 
-    return <Board id={boardId} boardLists={board.lists} />
+    return <>
+        <Header name={board.name}/>
+        <Board id={boardId} boardLists={board.lists} />
+    </>
 }
