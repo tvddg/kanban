@@ -1,12 +1,3 @@
-// TODO
-// add positioning while dragging
-// add optimistic updates to cards deletion
-
-// todo pass board: BoardWithLists prop to the <Board /> component
-// replace large code in Board.tsx with custom useOptimicticLists hook
-
-// then cover everything with tests
-// and add toast errors
 import { notFound } from "next/navigation";
 
 import Board from "@/components/Board";
