@@ -3,12 +3,8 @@
 import { DragDropProvider } from "@dnd-kit/react";
 import List from "./List";
 import { CardId, ListId } from "@/types/brands";
-import { ICard, ListWithCards } from "@/types";
-import { useOptimistic, startTransition, useState } from "react";
-import { addCard, getBoard, moveCard } from "@/lib/supabase/queries";
+import { ListWithCards } from "@/types";
 import useOptimisticLists from "@/hooks/useOptimisticLists";
-
-
 
 interface BoardProps {
     id: number;
@@ -17,7 +13,6 @@ interface BoardProps {
 
 export default function Board({ id, boardLists }: BoardProps) {
     const { optimisticLists, handleAddCard, handleMoveCard } = useOptimisticLists({ boardId: id, boardLists });
-
     return <div className="pt-8 flex flex-col justify-start min-h-0 h-212">
                 <DragDropProvider
                     onDragEnd={(e) => {
