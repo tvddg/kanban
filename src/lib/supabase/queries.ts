@@ -42,3 +42,13 @@ export async function moveCard(cardId: CardId, listId: ListId, position: number)
     if (error) 
         throw new Error(error.message);
 }
+
+export async function sortCard(cardId: CardId, position: number) {
+    const { error } = await client
+        .from("cards")
+        .update({ position })
+        .eq("id", cardId);
+
+    if (error)
+        throw new Error(error.message);
+}

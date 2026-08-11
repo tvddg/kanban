@@ -17,16 +17,17 @@ export interface ListProps {
 
 export default function List({ id, name, cards, handleAddCard }: ListProps) {
     const { ref } = useDroppable({
-        id
+        id,
+        type: "list"
     });
 
-    const cardPosition = cards.length === 0 
+    const newCardPosition = cards.length === 0 
         ? 1
         : cards.at(-1)?.position! / 2.0; 
 
     const [cardModalVisible, setCardModalVisible] = useState(false);
 
-    return <div ref={ref} 
+    return <div ref={cards.length === 0 ? ref : undefined} 
                 className="flex flex-col gap-8 ml-4 shrink-0 bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-full">
                     <header className="flex shrink-0 rounded-xl h-5">
                         <h2 className="ml-0.5 font-medium">{name}</h2>
@@ -34,8 +35,8 @@ export default function List({ id, name, cards, handleAddCard }: ListProps) {
                     <div className="text-lg flex flex-col gap-6 scrollbar-thumb-gray-700 shrink grow min-h-0 overflow-auto">
                         {
                             cards.length > 0 
-                            ? cards.map(card =>
-                                    <Card key={card.id} name={card.title} listId={id} id={card.id} />
+                            ? cards.sort((c1, c2) => c2.position - c1.position).map((card, index) =>
+                                    <Card key={card.id} name={card.title} index={index} listId={id} id={card.id} />
                                 )
                             : <p className="font-medium text-gray-700 self-center">
                                 Nothing here yet
@@ -50,7 +51,7 @@ export default function List({ id, name, cards, handleAddCard }: ListProps) {
                             Add new card
                         </button>
                         : <ListModal 
-                            addCard={(title: string, description?: string) => handleAddCard(cardPosition, title, description)}
+                            addCard={(title: string, description?: string) => handleAddCard(newCardPosition, title, description)}
                             toggleModal={() => setCardModalVisible(false)}
                         />
                     }

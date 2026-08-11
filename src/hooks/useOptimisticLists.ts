@@ -1,4 +1,4 @@
-import { addCard, getBoard, moveCard } from "@/lib/supabase/queries";
+import { addCard, getBoard, moveCard, sortCard } from "@/lib/supabase/queries";
 import { ICard, ListWithCards } from "@/types";
 import { CardId, ListId } from "@/types/brands";
 import { startTransition, useOptimistic, useState } from "react";

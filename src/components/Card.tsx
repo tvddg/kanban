@@ -1,17 +1,20 @@
 "use client";
 
-import { ListId, CardId } from "@/types/brands";
-import { useDraggable } from "@dnd-kit/react"; 
+import { ListId, CardId } from "@/types/brands"; 
+import { useSortable } from "@dnd-kit/react/sortable";
 
 export interface CardProps {
     id: CardId;
+    index: number,
     listId: ListId;
     name: string;
 }
 
-export default function Card({ id, listId, name }: CardProps) {
-    const { ref } = useDraggable({
+export default function Card({ id, index, listId, name }: CardProps) {
+    const { ref } = useSortable({
         id,
+        index: index,
+        group: listId,
         data: {
             list_id: listId
         }
