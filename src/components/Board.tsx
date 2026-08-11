@@ -15,7 +15,7 @@ interface BoardProps {
 }
 
 export default function Board({ id, boardLists }: BoardProps) {
-    const handleDragEnd = (e: DragEndEvent) => {
+    const handleDragEnd = async (e: DragEndEvent) => {
         if (e.canceled) 
             return;
         const { source, target } = e.operation;
@@ -39,10 +39,10 @@ export default function Board({ id, boardLists }: BoardProps) {
                 
                 if (index === 0) {
                     const maxCardPosition = cards.at(0)!.position;
-                    sortCard(cardId, maxCardPosition + 100.0);
+                    await sortCard(cardId, maxCardPosition + 100.0);
                 } else if (index === cards.length - 1) {
                     const minCardPosition = cards.at(-1)!.position;
-                    sortCard(cardId, minCardPosition / 2.0);
+                    await sortCard(cardId, minCardPosition / 2.0);
                 } else {
                     const [sortingCard] = cards?.splice(initialIndex, 1);
                     cards?.splice(index, 0, sortingCard);
@@ -51,7 +51,7 @@ export default function Board({ id, boardLists }: BoardProps) {
 
                     const newPosition = cardsAround.reduce((acc, card) => 
                         acc + card.position, 0) / 2.0;
-                    sortCard(cardId, newPosition);
+                    await sortCard(cardId, newPosition);
                 }
             } else {
                 const cardId = source?.id as CardId;
@@ -62,10 +62,10 @@ export default function Board({ id, boardLists }: BoardProps) {
                 
                 if (index === 0) {
                     const maxCardPosition = cards.at(0)!.position;
-                    moveCard(cardId, listId, maxCardPosition + 100.0);
+                    await moveCard(cardId, listId, maxCardPosition + 100.0);
                 } else if (index === cards.length) {
                     const minCardPosition = cards.at(-1)!.position;
-                    moveCard(cardId, listId, minCardPosition / 2.0);
+                    await moveCard(cardId, listId, minCardPosition / 2.0);
                 } else {
                     const fooCard = cards.at(0)!;
                     cards.splice(index, 0, fooCard);
@@ -74,13 +74,13 @@ export default function Board({ id, boardLists }: BoardProps) {
 
                     const newPosition = cardsAround.reduce((acc, card) => 
                         acc + card.position, 0) / 2.0;
-                    moveCard(cardId, listId, newPosition);
+                    await moveCard(cardId, listId, newPosition);
                 }
             }
         }
     };
 
-    const { optimisticLists, handleAddCard, handleMoveCard } = useOptimisticLists({ boardId: id, boardLists });
+    const { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard } = useOptimisticLists({ boardId: id, boardLists });
     return <div className="pt-8 flex flex-col justify-start min-h-0 h-212">
                 <DragDropProvider
                     sensors={(defaults) => [
@@ -100,6 +100,7 @@ export default function Board({ id, boardLists }: BoardProps) {
                                     name={list.name} 
                                     cards={list.cards}
                                     handleAddCard={(position: number, title: string, description?: string) => handleAddCard(list.id, position, title, description)}
+                                    handleDeleteCard={(cardId: CardId) => handleDeleteCard(list.id, cardId)}
                                 />
                             )
                         }

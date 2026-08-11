@@ -52,3 +52,13 @@ export async function sortCard(cardId: CardId, position: number) {
     if (error)
         throw new Error(error.message);
 }
+
+export async function deleteCard(cardId: CardId) {
+    const { error } = await client
+        .from('cards')
+        .delete()
+        .eq('id', cardId);
+
+    if (error)
+        throw new Error(error.message);
+}

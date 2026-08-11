@@ -1,6 +1,6 @@
 "use client";
 
-import { ListId } from "@/types/brands";
+import { CardId, ListId } from "@/types/brands";
 import Card from "./Card";
 import { useDroppable } from "@dnd-kit/react";
 import { useState } from "react";
@@ -13,9 +13,10 @@ export interface ListProps {
     cards: ICard[];
     handleAddCard: (position: number, title: string,
         description?: string) => void;
+    handleDeleteCard: (cardId: CardId) => void;
 }
 
-export default function List({ id, name, cards, handleAddCard }: ListProps) {
+export default function List({ id, name, cards, handleAddCard, handleDeleteCard }: ListProps) {
     const { ref } = useDroppable({
         id,
         type: "list"
@@ -36,7 +37,14 @@ export default function List({ id, name, cards, handleAddCard }: ListProps) {
                         {
                             cards.length > 0 
                             ? cards.sort((c1, c2) => c2.position - c1.position).map((card, index) =>
-                                    <Card key={card.id} name={card.title} index={index} listId={id} id={card.id} />
+                                    <Card 
+                                        key={card.id} 
+                                        name={card.title} 
+                                        index={index} 
+                                        listId={id} 
+                                        id={card.id}
+                                        handleDeleteCard={() => handleDeleteCard(card.id)}
+                                    />
                                 )
                             : <p className="font-medium text-gray-700 self-center">
                                 Nothing here yet

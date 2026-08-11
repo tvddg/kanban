@@ -1,4 +1,4 @@
-import { addCard, getBoard, moveCard, sortCard } from "@/lib/supabase/queries";
+import { addCard, deleteCard, getBoard, moveCard, sortCard } from "@/lib/supabase/queries";
 import { ICard, ListWithCards } from "@/types";
 import { CardId, ListId } from "@/types/brands";
 import { startTransition, useOptimistic, useState } from "react";
@@ -18,6 +18,12 @@ type ListAction = {
         sourceListId: ListId,
         targetListId: ListId,
         position: number
+    }
+} | {
+    type: "DELETE_CARD",
+    payload: {
+        listId: ListId,
+        cardId: CardId
     }
 }
 
@@ -102,6 +108,22 @@ export default function useOptimisticLists({
                     }
                 ].sort((li1, li2) => li1.position - li2.position);
             }
+            case "DELETE_CARD": {
+                const { cardId, listId } = action.payload;
+                const list = state.find(li => li.id === listId);
+                if (list === undefined) {
+                    return state;
+                }
+                return [
+                    ...state.filter(li => li.id !== list.id),
+                    {
+                        ...list,
+                        cards: list.cards
+                            .filter(card => card.id !== cardId)
+                            .sort((c1, c2) => c2.position - c1.position)
+                    }
+                ].sort((li1, li2) => li1.position - li2.position);
+            }
             default: 
                 return state; 
         }
@@ -149,6 +171,21 @@ export default function useOptimisticLists({
         });
     };
 
+    const handleDeleteCard = (listId: ListId, cardId: CardId) => {
+        startTransition(async () => {
+            dispatch({
+                type: "DELETE_CARD",
+                payload: {
+                    listId,
+                    cardId
+                }
+            });
+
+            await deleteCard(cardId);
+            setLists((await getBoard(boardId)).lists);
+        });
+    }
+
     // Return optimistic state and handlers
-    return { optimisticLists, handleAddCard, handleMoveCard };
+    return { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard };
 }
