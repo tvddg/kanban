@@ -24,7 +24,7 @@ export default function ListModal({ addCard, toggleModal }: ListModalProps) {
         onSubmit={handleSubmit(onSubmit)}
     >
         <input 
-            className="text-lg border-solid border-2 border-cyan-200 rounded-xl p-2 bg-gray-600 hover:border-cyan-500 hover:scale-103 active:border-cyan-500 active:scale-95 transition duration-200 cursor-pointer" 
+            className="text-lg border-solid border-2 border-cyan-200 rounded-xl p-2 bg-gray-600 active:border-cyan-500 transition duration-200 cursor-pointer outline-none hover:outline-none" 
             {...register("cardName", { required: true })}
         />
         <div className="flex">

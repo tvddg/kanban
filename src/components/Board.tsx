@@ -80,8 +80,8 @@ export default function Board({ id, boardLists }: BoardProps) {
         }
     };
 
-    const { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard } = useOptimisticLists({ boardId: id, boardLists });
-    return <div className="pt-8 flex flex-col justify-start min-h-0 h-212">
+    const { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard, handleEditCard } = useOptimisticLists({ boardId: id, boardLists });
+    return <div className="pt-8 flex flex-col justify-start min-h-0 h-10/12">
                 <DragDropProvider
                     sensors={(defaults) => [
                         ...defaults.filter((sensor) => sensor !== PointerSensor),
@@ -91,7 +91,7 @@ export default function Board({ id, boardLists }: BoardProps) {
                     ]}
                     onDragEnd={handleDragEnd}
                 >
-                    <section className="flex items-start text-2xl min-h-0 max-h-dvh overflow-x-scroll scrollbar-none content-start">
+                    <section className="flex items-start text-2xl min-h-0 max-h-full overflow-x-scroll scrollbar-none content-start">
                         {
                             optimisticLists.map(list =>
                                 <List 
@@ -101,6 +101,7 @@ export default function Board({ id, boardLists }: BoardProps) {
                                     cards={list.cards}
                                     handleAddCard={(position: number, title: string, description?: string) => handleAddCard(list.id, position, title, description)}
                                     handleDeleteCard={(cardId: CardId) => handleDeleteCard(list.id, cardId)}
+                                    handleEditCard={(cardId: CardId, title: string) => handleEditCard(list.id, cardId, title)}
                                 />
                             )
                         }

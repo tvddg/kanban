@@ -1,4 +1,4 @@
-import { addCard, deleteCard, getBoard, moveCard, sortCard } from "@/lib/supabase/queries";
+import { addCard, deleteCard, getBoard, moveCard, updateCard } from "@/lib/supabase/queries";
 import { ICard, ListWithCards } from "@/types";
 import { CardId, ListId } from "@/types/brands";
 import { startTransition, useOptimistic, useState } from "react";
@@ -24,6 +24,13 @@ type ListAction = {
     payload: {
         listId: ListId,
         cardId: CardId
+    }
+} | {
+    type: "EDIT_CARD",
+    payload: {
+        listId: ListId,
+        cardId: CardId,
+        title: string
     }
 }
 
@@ -124,8 +131,33 @@ export default function useOptimisticLists({
                     }
                 ].sort((li1, li2) => li1.position - li2.position);
             }
-            default: 
+            case "EDIT_CARD": {
+                const { listId, cardId, title } = action.payload;
+
+                const list = state.find(li => li.id === listId);
+                if (list === undefined) return state;
+
+                const card = list.cards.find(card => card.id === cardId);
+                if (card === undefined) return state;
+
+                return [
+                    ...state.filter(li => li.id !== list.id),
+                    {
+                        ...list,
+                        cards: [
+                            ...list.cards.filter(card => card.id !== cardId),
+                            {
+                                ...card,
+                                title
+                            }
+                        ].sort((c1, c2) => c2.position - c1.position)
+                    }
+                ].sort((li1, li2) => li1.position - li2.position);
+            }
+            default: { 
+                const check = action satisfies never;
                 return state; 
+            }
         }
     };
     // Optimistic lists state
@@ -186,6 +218,19 @@ export default function useOptimisticLists({
         });
     }
 
+    const handleEditCard = (listId: ListId, cardId: CardId, title: string) => {
+        startTransition(async () => {
+            dispatch({
+                type: "EDIT_CARD",
+                payload: { listId, cardId, title }
+            });
+
+            await updateCard(cardId, title);
+
+            setLists((await getBoard(boardId)).lists);
+        });
+    }
+
     // Return optimistic state and handlers
-    return { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard };
+    return { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard, handleEditCard };
 }

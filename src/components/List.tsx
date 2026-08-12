@@ -14,9 +14,10 @@ export interface ListProps {
     handleAddCard: (position: number, title: string,
         description?: string) => void;
     handleDeleteCard: (cardId: CardId) => void;
+    handleEditCard: (cardId: CardId, title: string) => void;
 }
 
-export default function List({ id, name, cards, handleAddCard, handleDeleteCard }: ListProps) {
+export default function List({ id, name, cards, handleAddCard, handleDeleteCard, handleEditCard }: ListProps) {
     const { ref } = useDroppable({
         id,
         type: "list"
@@ -29,7 +30,7 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard 
     const [cardModalVisible, setCardModalVisible] = useState(false);
 
     return <div ref={cards.length === 0 ? ref : undefined} 
-                className="flex flex-col gap-8 ml-4 shrink-0 bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-9/12">
+                className="flex flex-col gap-8 ml-4 shrink-0 grow-0 overflow-clip bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-full">
                     <header className="flex shrink-0 rounded-xl h-5">
                         <h2 className="ml-0.5 font-medium">{name}</h2>
                     </header>
@@ -44,6 +45,7 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard 
                                         listId={id} 
                                         id={card.id}
                                         handleDeleteCard={() => handleDeleteCard(card.id)}
+                                        handleEditCard={(title: string) => handleEditCard(card.id, title)}
                                     />
                                 )
                             : <p className="font-medium text-gray-700 self-center">

@@ -62,3 +62,13 @@ export async function deleteCard(cardId: CardId) {
     if (error)
         throw new Error(error.message);
 }
+
+export async function updateCard(cardId: CardId, title: string) {
+    const { error } = await client
+        .from('cards')
+        .update({ title })
+        .eq('id', cardId);
+
+    if (error)
+        throw new Error(error.message);
+}
