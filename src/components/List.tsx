@@ -29,7 +29,7 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard 
     const [cardModalVisible, setCardModalVisible] = useState(false);
 
     return <div ref={cards.length === 0 ? ref : undefined} 
-                className="flex flex-col gap-8 ml-4 shrink-0 bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-full">
+                className="flex flex-col gap-8 ml-4 shrink-0 bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-9/12">
                     <header className="flex shrink-0 rounded-xl h-5">
                         <h2 className="ml-0.5 font-medium">{name}</h2>
                     </header>
