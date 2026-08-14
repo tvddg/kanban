@@ -40,7 +40,7 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard,
                             ? cards.sort((c1, c2) => c2.position - c1.position).map((card, index) =>
                                     <Card 
                                         key={card.id} 
-                                        name={card.title} 
+                                        title={card.title} 
                                         index={index} 
                                         listId={id} 
                                         id={card.id}

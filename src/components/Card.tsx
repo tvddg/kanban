@@ -5,16 +5,16 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import Image from "next/image";
 import { useState } from "react";
 
-export interface CardProps {
+interface CardProps {
     id: CardId;
-    index: number,
+    index: number;
     listId: ListId;
-    name: string;
+    title: string;
     handleDeleteCard: () => void;
     handleEditCard: (title: string) => void;
 }
 
-export default function Card({ id, index, listId, name, handleDeleteCard, handleEditCard }: CardProps) {
+export default function Card({ id, index, listId, title, handleDeleteCard, handleEditCard }: CardProps) {
     const { ref } = useSortable({
         id,
         index: index,
@@ -23,9 +23,9 @@ export default function Card({ id, index, listId, name, handleDeleteCard, handle
             list_id: listId
         }
     });
-
+    
     const [isEditing, setIsEditing] = useState(false);
-    const [cardTitle, setCardTitle] = useState(name);
+    const [cardTitle, setCardTitle] = useState(title);
 
     return (
         isEditing 
@@ -57,7 +57,7 @@ export default function Card({ id, index, listId, name, handleDeleteCard, handle
             ref={ref}
             className="flex justify-between border-solid text-ellipsis whitespace-nowrap overflow-clip border-2 shadow-2xs border-cyan-200 rounded-xl p-2 hover:border-cyan-500 hover:scale-100 active:border-cyan-500 active:scale-95 transition duration-200 cursor-pointer"
         >
-            {name}
+            {title}
             <div className="flex gap-1.5">
                 <Image alt="Edit icon" src="/edit_icon.svg"
                     width={23} height={23}

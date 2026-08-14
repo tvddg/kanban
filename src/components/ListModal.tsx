@@ -8,14 +8,14 @@ interface ListModalProps {
 }
 
 interface ModalForm {
-    cardName: string;
+    title: string;
 }
 
 export default function ListModal({ addCard, toggleModal }: ListModalProps) {
     const { register, handleSubmit } = useForm<ModalForm>();
 
-    const onSubmit: SubmitHandler<ModalForm> = ({ cardName }) => {
-        addCard(cardName);
+    const onSubmit: SubmitHandler<ModalForm> = ({ title }) => {
+        addCard(title);
         toggleModal();
     };
 
@@ -25,7 +25,7 @@ export default function ListModal({ addCard, toggleModal }: ListModalProps) {
     >
         <input 
             className="text-lg border-solid border-2 border-cyan-200 rounded-xl p-2 bg-gray-600 active:border-cyan-500 transition duration-200 cursor-pointer outline-none hover:outline-none" 
-            {...register("cardName", { required: true })}
+            {...register("title", { required: true })}
         />
         <div className="flex">
             <button 
