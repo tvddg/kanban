@@ -13,7 +13,7 @@ const config: Config = {
   testEnvironment: "jsdom",
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testPathIgnorePatterns: [
-    '<rootDir>/e2e/'
+    '<rootDir>/__tests__/e2e/'
   ],
   moduleNameMapper: {
     '^next/image$': '<rootDir>/__mocks__/next-image-mock.tsx', 
