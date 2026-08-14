@@ -1,7 +1,7 @@
 "use client";
 
 import { CardId, ListId } from "@/types/brands";
-import Card from "./Card";
+import Card from "../Card";
 import { useDroppable } from "@dnd-kit/react";
 import { useState } from "react";
 import ListModal from "./ListModal";

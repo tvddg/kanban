@@ -2,7 +2,7 @@
 
 import { DragDropProvider, DragEndEvent } from "@dnd-kit/react";
 import { PointerSensor, PointerActivationConstraints } from "@dnd-kit/dom"
-import List from "./List";
+import List from "./List/List";
 import { CardId, ListId } from "@/types/brands";
 import { ListWithCards } from "@/types";
 import useOptimisticLists from "@/hooks/useOptimisticLists";
