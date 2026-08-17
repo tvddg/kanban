@@ -7,6 +7,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   use: {
+    screenshot: "only-on-failure",
     trace: 'on-first-retry',
     baseURL: 'http://localhost:3000'
   },
@@ -15,7 +16,9 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000
+    timeout: 120000,
+    stderr: "ignore",
+    stdout: "ignore"
   },
 
   projects: [

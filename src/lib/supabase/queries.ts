@@ -9,8 +9,8 @@ export async function getBoard(boardId: number) {
         .eq('id', boardId)
         .single();
 
-    if (error) 
-        throw new Error(error.message);
+    if (error?.code === "PGRST116") 
+        throw new Error("The board is not accessible");
 
     return data as BoardWithLists;
 }
@@ -28,7 +28,7 @@ export async function addCard(listId: ListId, position: number, title: string, d
         .upsert(card);
 
     if (error) 
-        throw new Error(error.message);
+        throw new Error("Could not add a new card");
 }
 
 export async function moveCard(cardId: CardId, listId: ListId, position: number) {
@@ -40,7 +40,7 @@ export async function moveCard(cardId: CardId, listId: ListId, position: number)
         }).eq('id', cardId);
     
     if (error) 
-        throw new Error(error.message);
+        throw new Error("Could not move existing card");
 }
 
 export async function sortCard(cardId: CardId, position: number) {
@@ -50,7 +50,7 @@ export async function sortCard(cardId: CardId, position: number) {
         .eq("id", cardId);
 
     if (error)
-        throw new Error(error.message);
+        throw new Error("Could not move existing card");
 }
 
 export async function deleteCard(cardId: CardId) {
@@ -60,7 +60,7 @@ export async function deleteCard(cardId: CardId) {
         .eq('id', cardId);
 
     if (error)
-        throw new Error(error.message);
+        throw new Error("Could not delete existing card");
 }
 
 export async function updateCard(cardId: CardId, title: string) {
@@ -70,5 +70,5 @@ export async function updateCard(cardId: CardId, title: string) {
         .eq('id', cardId);
 
     if (error)
-        throw new Error(error.message);
+        throw new Error("Could not update existing card");
 }

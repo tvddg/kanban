@@ -1,4 +1,11 @@
 import { test, expect } from "@playwright/test";
+import RESTORE_TEST_DB from "./utils/restore_test_db";
+
+const TEST_TIMESTAMP = Date.now();
+
+test.afterAll(async () => {
+    await RESTORE_TEST_DB(TEST_TIMESTAMP);
+})
 
 test("navigates to an existing board page", async ({ page }) => {
     await page.goto("/board/1");
@@ -17,9 +24,9 @@ test("navigates to an existing board page", async ({ page }) => {
     )).toBeVisible();
 
     // shows cards of the list 1
-    await expect(page.getByText("Test Card 1")).toBeVisible();
-    await expect(page.getByText("Test Card 2")).toBeVisible();
-    await expect(page.getByText("Test Card 3")).toBeVisible();
+    await expect(page.getByText("Test Card 1", { exact: true })).toBeVisible();
+    await expect(page.getByText("Test Card 2", { exact: true })).toBeVisible();
+    await expect(page.getByText("Test Card 3", { exact: true })).toBeVisible();
 
     // shows fallback UI on list 2
     await expect(page.getByText("Nothing here yet")).toBeVisible();
@@ -51,6 +58,10 @@ test("shows an error on unreachable URL", async ({ page }) => {
         "heading",
         { name: "Something went wrong"}
     )).toBeVisible();
+    await expect(page.getByRole(
+        "heading",
+        { name: "The board is not accessible"}
+    )).toBeVisible();
 
     await expect(page.getByRole(
         "button",
@@ -61,3 +72,56 @@ test("shows an error on unreachable URL", async ({ page }) => {
         { name: "Try again" }
     )).toBeVisible();
 })
+
+test("creates a new card", async ({ page }) => {
+    await page.goto("/board/1");
+
+    const secondTestList = page.getByTestId('li_2');
+    
+    await secondTestList.getByRole('button', { name: "Add new card" }).click();
+
+    await secondTestList.getByRole('textbox').fill(`Playwright ${TEST_TIMESTAMP}`);
+    await secondTestList.getByRole('button', { name: "Add" }).click();
+
+    await expect(secondTestList.getByRole('button', { name: "Add new card" })).toBeVisible();
+    await expect(secondTestList.getByText(`Playwright ${TEST_TIMESTAMP}`)).toBeVisible();
+
+    await page.waitForTimeout(500); // to assure that request to db will be sent
+})
+
+test("updates the card", async ({ page }) => {
+    await page.goto("/board/1");
+    
+    const firstTestList = page.getByTestId('li_1');
+    const cardToUpdate = firstTestList.locator('span', { hasText: "Test Card 1" });
+    await cardToUpdate.getByAltText("Edit icon").click();
+
+    const cardInput = firstTestList.getByRole("textbox");
+    const okButton = firstTestList.getByRole("button", { name: "OK", exact: true });
+
+    expect(cardInput).toBeVisible();
+    expect(cardInput).toHaveValue("Test Card 1");
+    expect(okButton).toBeVisible();
+    expect(firstTestList.getByRole("button", { name: "Back", exact: true })).toBeVisible();
+
+    await cardInput.fill("Updated Test Card 1");
+    await okButton.click();
+
+    expect(firstTestList.getByText("Updated Test Card 1")).toBeVisible();
+    await page.waitForTimeout(500);
+});
+
+test("deletes a card", async ({ page }) => {
+    await page.goto("/board/1");
+
+    const secondTestList = page.getByTestId('li_2');
+    await secondTestList.getByRole('button', { name: "Add new card" }).click();
+    await secondTestList.getByRole('textbox').fill("foo");
+    await secondTestList.getByRole('button', { name: "Add" }).click();
+    await page.waitForTimeout(1000);
+
+    const cardToDelete = secondTestList.locator('span', { hasText: "foo" });
+    await cardToDelete.getByAltText("Delete icon").click();
+
+    await expect(secondTestList.getByText("foo", { exact: true })).not.toBeVisible();
+});
