@@ -8,27 +8,32 @@ import { ListWithCards } from "@/types";
 import useOptimisticLists from "@/hooks/useOptimisticLists";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { moveCard, sortCard } from "@/lib/supabase/queries";
-import { startTransition } from "react";
 
 interface BoardProps {
     id: number;
     boardLists: ListWithCards[];
 }
 
-const CARD_POSITION_GAP = 100.0;
+const POSITION_BUFFER_VAL = 100.0;
 const LIST_DROP_POSITION = 1;
 
 function computeInsertPosition(cardsWithoutMovingCard: { position: number }[], index: number): number {
     if (cardsWithoutMovingCard.length === 0) {
-        return CARD_POSITION_GAP;
+        return POSITION_BUFFER_VAL;
     }
     if (index === 0) {
-        return cardsWithoutMovingCard[0].position + CARD_POSITION_GAP;
+        return cardsWithoutMovingCard[0]
+        .position + POSITION_BUFFER_VAL;
     }
     if (index === cardsWithoutMovingCard.length) {
-        return cardsWithoutMovingCard[cardsWithoutMovingCard.length - 1].position / 2.0;
+        return cardsWithoutMovingCard[
+            cardsWithoutMovingCard.length - 1
+        ].position / 2.0;
     }
-    return (cardsWithoutMovingCard[index - 1].position + cardsWithoutMovingCard[index].position) / 2.0;
+    return (
+        cardsWithoutMovingCard[index - 1]
+        .position + cardsWithoutMovingCard[index].position) 
+        / 2.0;
 }
 
 export default function Board({ id, boardLists }: BoardProps) {

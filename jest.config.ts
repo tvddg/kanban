@@ -17,6 +17,7 @@ const config: Config = {
   ],
   moduleNameMapper: {
     '^next/image$': '<rootDir>/__mocks__/next-image-mock.tsx', 
+    '\\./client$': '<rootDir>/__mocks__/supabase-client-mock.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   ...tsEsmJestCfg
