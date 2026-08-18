@@ -2,6 +2,7 @@ import { addCard, deleteCard, getBoard, moveCard, updateCard } from "@/lib/supab
 import { ICard, ListWithCards } from "@/types";
 import { CardId, ListId } from "@/types/brands";
 import { startTransition, useOptimistic, useState } from "react";
+import { toast } from "react-toastify";
 
 type ListAction = {
     type: "ADD_CARD",
@@ -55,10 +56,15 @@ export default function useOptimisticLists({
                 if (targetList === undefined) {
                     return state;
                 }
+                const isPresent = targetList.cards.find(card => card.id < 0) !== undefined;
+                if (isPresent) {
+                    return state;
+                }
+
                 const card: ICard = {
                     created_at: (new Date).toLocaleDateString('sv-SE'),
                     description: action.payload.description ?? null,
-                    id: Date.now() as CardId,
+                    id: Date.now() * -1 as CardId,
                     list_id: action.payload.listId,
                     position: action.payload.position,
                     title: action.payload.title
@@ -176,13 +182,27 @@ export default function useOptimisticLists({
                 }
             });
             
-            await addCard(
-                listId,
-                position,
-                title,
-                description
-            );
-            setLists((await getBoard(boardId)).lists);
+            try {
+                await addCard(
+                    listId,
+                    position,
+                    title,
+                    description
+                );
+                setLists((await getBoard(boardId)).lists);
+            } catch (err) {
+                if (err instanceof Error)
+                    toast.error(`Error: ${err.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark"
+                    });
+            }
         });
     }
 
@@ -198,8 +218,22 @@ export default function useOptimisticLists({
                 }
             });
 
-            await moveCard(cardId, targetListId, position);
-            setLists((await getBoard(boardId)).lists)
+            try {
+                await moveCard(cardId, targetListId, position);
+                setLists((await getBoard(boardId)).lists);
+            } catch (err) {
+                if (err instanceof Error)
+                    toast.error(`Error: ${err.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark"
+                    });
+            }
         });
     };
 
@@ -212,9 +246,22 @@ export default function useOptimisticLists({
                     cardId
                 }
             });
-
-            await deleteCard(cardId);
-            setLists((await getBoard(boardId)).lists);
+            try {
+                await deleteCard(cardId);
+                setLists((await getBoard(boardId)).lists);
+            } catch (err) {
+                if (err instanceof Error)
+                    toast.error(`Error: ${err.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark"
+                    });
+            }
         });
     }
 
@@ -225,9 +272,22 @@ export default function useOptimisticLists({
                 payload: { listId, cardId, title }
             });
 
-            await updateCard(cardId, title);
-
-            setLists((await getBoard(boardId)).lists);
+            try {
+                await updateCard(cardId, title);
+                setLists((await getBoard(boardId)).lists);
+            } catch (err) {
+                if (err instanceof Error)
+                    toast.error(`Error: ${err.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark"
+                    });
+            }
         });
     }
 

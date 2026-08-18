@@ -8,6 +8,7 @@ import { ListWithCards } from "@/types";
 import useOptimisticLists from "@/hooks/useOptimisticLists";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { moveCard, sortCard } from "@/lib/supabase/queries";
+import { toast } from "react-toastify";
 
 interface BoardProps {
     id: number;
@@ -37,7 +38,9 @@ function computeInsertPosition(cardsWithoutMovingCard: { position: number }[], i
 }
 
 export default function Board({ id, boardLists }: BoardProps) {
-    const { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard, handleEditCard } = useOptimisticLists({ boardId: id, boardLists });
+    const { optimisticLists, handleAddCard,
+        handleMoveCard, handleDeleteCard,
+        handleEditCard } = useOptimisticLists({ boardId: id, boardLists });
 
     const handleReorderCard = async (operation: DragEndEvent["operation"]) => {
         const { source } = operation;
@@ -65,10 +68,24 @@ export default function Board({ id, boardLists }: BoardProps) {
 
         const newPosition = computeInsertPosition(cardsWithoutMovingCard, index);
 
-        if (isSameList) {
-            await sortCard(cardId, newPosition);
-        } else {
-            await moveCard(cardId, listId, newPosition);
+        try {
+            if (isSameList) {
+                await sortCard(cardId, newPosition);
+            } else {
+                await moveCard(cardId, listId, newPosition);
+            }
+        } catch (err) {
+            if (err instanceof Error)
+                toast.error(`Error: ${err.message}`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark"
+                });
         }
     };
 
