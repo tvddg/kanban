@@ -41,18 +41,22 @@ export default function Board({ id, boardLists }: BoardProps) {
 
     const handleReorderCard = async (operation: DragEndEvent["operation"]) => {
         const { source } = operation;
-        if (!isSortable(source))
+
+        if (!isSortable(source)) {
             return;
+        }
 
         const { index, initialIndex, group, initialGroup } = source;
-        if (group === undefined)
+        if (group === undefined) {
             return;
+        }
 
         const cardId = source.id as CardId;
         const listId = group as ListId;
         const cards = boardLists.find(li => li.id === listId)?.cards;
-        if (!cards || cards.length === 0)
+        if (!cards || cards.length === 0) {
             return;
+        }
 
         const isSameList = group === initialGroup;
         const cardsWithoutMovingCard = isSameList

@@ -3,6 +3,8 @@ import RESTORE_TEST_DB from "./utils/restore_test_db";
 
 const TEST_TIMESTAMP = Date.now();
 
+test.describe.configure({ mode: "serial" });
+
 test.afterAll(async () => {
     await RESTORE_TEST_DB(TEST_TIMESTAMP);
 })

@@ -56,6 +56,7 @@ export default function Card({ id, index, listId, title, handleDeleteCard, handl
         : <span 
             ref={ref}
             className="flex justify-between border-solid text-ellipsis whitespace-nowrap overflow-clip border-2 shadow-2xs border-cyan-200 rounded-xl p-2 hover:border-cyan-500 hover:scale-100 active:border-cyan-500 active:scale-95 transition duration-200 cursor-pointer"
+            data-testid={`card_${id}`}
         >
             {title}
             <div className="flex gap-1.5">

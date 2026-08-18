@@ -10,6 +10,13 @@ const RESTORE_TEST_DB = async (timestamp: number) => {
         .from("cards")
         .update({ title: "Test Card 1" })
         .eq('id', 1);
+    await client
+        .from("cards")
+        .update({ position: 1 });
+    await client
+        .from("cards")
+        .update({ list_id: 1 })
+        .eq("id", 2);
 };
 
 export default RESTORE_TEST_DB;
