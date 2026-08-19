@@ -6,7 +6,7 @@ const TEST_TIMESTAMP = Date.now();
 test.describe.configure({ mode: "serial" });
 
 test.afterAll(async () => {
-    await RESTORE_TEST_DB(TEST_TIMESTAMP);
+    await RESTORE_TEST_DB();
 })
 
 test("navigates to an existing board page", async ({ page }) => {

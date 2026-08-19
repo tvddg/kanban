@@ -1,5 +1,7 @@
 import React from "react";
+import { ComponentPropsWithoutRef } from "react";
 
-const MockImage = (props: any) => <img {...props} />
+// eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+const MockImage = (props: ComponentPropsWithoutRef<"img">) => <img {...props} />
 
 export default MockImage;

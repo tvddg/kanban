@@ -1,6 +1,6 @@
 import client from "@/lib/supabase/client";
 
-const RESTORE_TEST_DB = async (timestamp: number) => {
+const RESTORE_TEST_DB = async () => {
     await client
         .from("cards")
         .delete()

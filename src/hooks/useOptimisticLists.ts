@@ -83,7 +83,7 @@ export default function useOptimisticLists({
             case "MOVE_CARD": {
                 const { cardId, sourceListId, targetListId, position } = action.payload;
                 let [sourceList, targetList]: ListWithCards[] = [];
-                for (let li of state) {
+                for (const li of state) {
                     if (li.id === sourceListId) {
                         sourceList = li;
                     }
@@ -161,8 +161,8 @@ export default function useOptimisticLists({
                 ].sort((li1, li2) => li1.position - li2.position);
             }
             default: { 
-                const check = action satisfies never;
-                return state; 
+                action satisfies never; 
+                return state;
             }
         }
     };

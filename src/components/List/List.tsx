@@ -23,9 +23,13 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard,
         type: "list"
     });
 
-    const newCardPosition = cards.length === 0 
-        ? 1
-        : cards.at(-1)?.position! / 2.0; 
+    let newCardPosition = 1;
+    if (cards.length !== 0) {
+        const lastCard = cards.at(-1);
+        if (!lastCard) 
+            throw new Error("Error while computing card position");
+        newCardPosition = lastCard.position / 2.0;
+    }
 
     const [cardModalVisible, setCardModalVisible] = useState(false);
 
