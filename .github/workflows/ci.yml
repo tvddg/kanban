@@ -29,9 +29,14 @@ jobs:
             - run: npm run lint -- --max-warnings=0
             - run: npm run typecheck
     e2e:
+        environment: ${{ vars.TEST_ENV }}
         timeout-minutes: 20
         name: E2E tests
         runs-on: ubuntu-latest
+
+        env:
+            NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
         
         steps:
             - name: Checkout code
@@ -57,8 +62,8 @@ jobs:
               uses: actions/upload-artifact@v7
               if: ${{ !cancelled() && steps.e2e-tests.conclusion != 'skipped' }}
               with:
-                name: e2e-report
-                path: e2e/
+                name: playwright-report
+                path: playwright-report/
                 retention-days: 15 
                 if-no-files-found: error
     unit:

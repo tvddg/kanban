@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test';
 
-test('has title', async ({ page }) => {
-    await page.goto("http://localhost:3000");
+test('navigates to the home page', async ({ page }) => {
+    await page.goto("/");
 
     await expect(page).toHaveTitle(/Kanban-board/);
 });
 
-test('has text content', async ({ page }) => {
-    await page.goto("http://localhost:3000");
+test('home page contains text content', async ({ page }) => {
+    await page.goto("/");
 
     await expect(
         page.getByRole(

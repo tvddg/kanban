@@ -1,26 +1,26 @@
 import type {Config} from 'jest';
 import nextJest from "next/jest.js";
+import { createDefaultEsmPreset } from "ts-jest";
+
+const tsEsmJestCfg = createDefaultEsmPreset();
 
 const createJestConfig = nextJest({
-    dir: "./"
+    dir: './',
 });
 
 const config: Config = {
-  reporters: process.env.CI
-    ? [['github-actions', { silent: false }], 'summary']
-    : ['default'],
   clearMocks: true,
-  collectCoverage: true,
-  coverageDirectory: "coverage",
-  coverageProvider: "v8",
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/app/$1',
-  },
   testEnvironment: "jsdom",
-  testMatch: [ 
-    '<rootDir>/tests/**/*.test.{ts,tsx}', 
-  ]
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  testPathIgnorePatterns: [
+    '<rootDir>/__tests__/e2e/'
+  ],
+  moduleNameMapper: {
+    '^next/image$': '<rootDir>/__mocks__/next-image-mock.tsx', 
+    '\\./client$': '<rootDir>/__mocks__/supabase-client-mock.ts',
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+  ...tsEsmJestCfg
 };
 
 export default createJestConfig(config);
