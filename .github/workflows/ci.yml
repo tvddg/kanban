@@ -58,9 +58,9 @@ jobs:
               id: e2e-tests
               run: npm run test:e2e -- --reporter=html,github
             - name: Upload Playwright report
-            if: always() 
-            uses: actions/upload-artifact@v4
-            with:
+              if: always() 
+              uses: actions/upload-artifact@v4
+              with:
                 name: playwright-report
                 path: playwright-report/
                 retention-days: 30
