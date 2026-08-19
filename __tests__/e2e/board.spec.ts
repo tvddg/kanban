@@ -43,7 +43,7 @@ test("navigates to 404 page on invalid URL", async ({ page }) => {
     )).toBeVisible();
     await expect(page.getByRole(
         "heading",
-        { name: "The page you are trying to access doesn't exist" }
+        { name: "The page you are trying to access does not exist" }
     )).toBeVisible();
 
     await expect(page.getByRole(
