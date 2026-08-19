@@ -36,7 +36,7 @@ jobs:
 
         env:
             NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-            NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}
         
         steps:
             - name: Checkout code
@@ -57,13 +57,15 @@ jobs:
             - name: Run tests
               id: e2e-tests
               run: npm run test:e2e -- --reporter=html,github
-            - name: Upload Playwright report
-              if: always() 
-              uses: actions/upload-artifact@v4
+
+            - name: Upload report
+              uses: actions/upload-artifact@v7
+              if: ${{ !cancelled() && steps.e2e-tests.conclusion != 'skipped' }}
               with:
                 name: playwright-report
                 path: playwright-report/
-                retention-days: 30
+                retention-days: 15 
+                if-no-files-found: error
     unit:
         timeout-minutes: 10
         name: Unit tests
