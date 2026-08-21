@@ -9,9 +9,7 @@ import useOptimisticLists from "@/hooks/useOptimisticLists";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { moveCard, sortCard } from "@/lib/supabase/queries";
 import { toast } from "react-toastify";
-
-import Image from "next/image";
-import { useState } from "react";
+import NewList from "./NewList";
 
 interface BoardProps {
     id: number;
@@ -43,7 +41,7 @@ function computeInsertPosition(cardsWithoutMovingCard: { position: number }[], i
 export default function Board({ id, boardLists }: BoardProps) {
     const { optimisticLists, handleAddCard,
         handleMoveCard, handleDeleteCard,
-        handleEditCard } = useOptimisticLists({ boardId: id, boardLists });
+        handleEditCard, handleCreateNewList } = useOptimisticLists({ boardId: id, boardLists });
 
     const handleReorderCard = async (operation: DragEndEvent["operation"]) => {
         const { source } = operation;
@@ -109,11 +107,6 @@ export default function Board({ id, boardLists }: BoardProps) {
         await handleReorderCard(e.operation);
     };
 
-    const [isListCreating, setIsListCreating] = useState(false);
-    const handleCreateList = () => {
-        setIsListCreating(true);
-    };
-
     return <div className="pt-8 flex flex-col justify-start min-h-0 h-10/12">
                 <DragDropProvider
                     sensors={(defaults) => [
@@ -138,28 +131,10 @@ export default function Board({ id, boardLists }: BoardProps) {
                                 />
                             )
                         }
-                        <div className="flex flex-col gap-8 ml-4 shrink-0 grow-0 overflow-clip bg-gray-200/25 border-2 p-8 rounded-xl w-74 max-w-76 min-h-0 max-h-full">
-                            {
-                                isListCreating 
-                                ? <form className="flex flex-col items-start gap-4 text-xl">
-                                    <input 
-                                        className="outline-none border rounded-xl p-1.5 border-gray-100/30"
-                                        type="text" name="List name" 
-                                        placeholder="Type in name of the list" 
-                                    />
-                                    <button
-                                        className="hover:scale-105 duration-75 cursor-pointer"
-                                    >OK</button>
-                                </form>
-                                : <div 
-                                    onClick={() => handleCreateList()}
-                                    className="hover:scale-105 cursor-pointer duration-150 flex items-center gap-2 flex-col m-auto p-6"
-                                >
-                                    <p className="color-white">Create new list</p>
-                                    <Image src="/plus_icon.svg" alt="Create new list icon" width={30} height={30} />
-                                </div>
-                            }
-                        </div>
+                        <NewList createList={(name: string) => handleCreateNewList(name, optimisticLists.length 
+                            ? (optimisticLists.at(-1)?.position ?? 0) + 1 
+                            : 1
+                        )}/>
                     </section>
                 </DragDropProvider>
             </div>

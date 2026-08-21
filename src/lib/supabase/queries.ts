@@ -1,6 +1,6 @@
 import client from "./client";
-import { BoardWithLists, INewCard } from "@/types";
-import { CardId, ListId } from "@/types/brands";
+import { BoardWithLists, INewCard, INewList } from "@/types";
+import { BoardId, CardId, ListId } from "@/types/brands";
 
 export async function getBoard(boardId: number) {
     const { data, error } = await client
@@ -71,4 +71,21 @@ export async function updateCard(cardId: CardId, title: string) {
 
     if (error)
         throw new Error("Could not update existing card");
+}
+
+export async function createList(boardId: BoardId, name: string, position: number) {
+    const newList: INewList = {
+        board_id: boardId,
+        name,
+        position
+    };
+    
+    const { error } = await client
+        .from("lists")
+        .upsert(newList);
+
+    if (error) {
+        console.log(error);
+        throw new Error("Error while creating new list");
+    } 
 }
