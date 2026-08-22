@@ -5,6 +5,11 @@ const RESTORE_TEST_DB = async () => {
         .from("cards")
         .delete()
         .gt('id', 3);
+
+    await client
+        .from("lists")
+        .delete()
+        .gt("id", 2);
     
     await client
         .from("cards")

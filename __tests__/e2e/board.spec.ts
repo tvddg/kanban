@@ -127,3 +127,33 @@ test("deletes a card", async ({ page }) => {
 
     await expect(secondTestList.getByText("foo", { exact: true })).not.toBeVisible();
 });
+
+test("creates a new list", async ({ page }) => {
+    await page.goto("/board/1");
+
+    const newListPanel = page.getByTestId("newListContainer").locator('div');
+    await expect(newListPanel).toBeVisible();
+
+    await newListPanel.click();
+
+    const form = page.getByTestId("newListContainer").getByRole("form");
+    const inputField = form.getByRole("textbox");
+    const okButton = form.getByRole("button", { name: /ok/i });
+
+    // check if the form is present
+    await expect(form).toBeVisible();
+    await expect(inputField).toBeVisible();
+    await expect(inputField).toHaveValue("");
+    await expect(okButton).toBeVisible();
+    await expect(form.getByRole("button", { name: /cancel/i })).toBeVisible();
+    
+    // perform an action
+    await inputField.fill(`Test list ${TEST_TIMESTAMP}`);
+    await okButton.click();
+
+    await page.waitForTimeout(300);
+
+    // final check
+    await expect(page.getByText("Create new list")).toBeVisible();
+    await expect(page.getByText(`Test list ${TEST_TIMESTAMP}`)).toBeVisible();
+});
