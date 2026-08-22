@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import List from "@/components/List/List";
+import List from "@/components/List";
 import { CardId, ListId } from "@/types/brands";
 import { ICard } from "@/types";
 

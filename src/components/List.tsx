@@ -1,10 +1,10 @@
 "use client";
 
 import { CardId, ListId } from "@/types/brands";
-import Card from "../Card";
+import Card from "./Card";
 import { useDroppable } from "@dnd-kit/react";
 import { useState } from "react";
-import ListModal from "./ListModal";
+import NewCard from "./modals/NewCard";
 import { ICard } from "@/types";
 
 export interface ListProps {
@@ -66,7 +66,7 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard,
                             className="font-extralight shrink-0 text-lg border-solid border rounded-xl w-fit p-1.5 mr-auto hover:border-cyan-400 active:border-cyan-400 active:scale-95 transition duration-200 cursor-pointer">
                             Add new card
                         </button>
-                        : <ListModal 
+                        : <NewCard 
                             addCard={(title: string, description?: string) => handleAddCard(newCardPosition, title, description)}
                             toggleModal={() => setCardModalVisible(false)}
                         />

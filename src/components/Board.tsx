@@ -2,14 +2,14 @@
 
 import { DragDropProvider, DragEndEvent } from "@dnd-kit/react";
 import { PointerSensor, PointerActivationConstraints } from "@dnd-kit/dom"
-import List from "./List/List";
+import List from "./List";
 import { CardId, ListId } from "@/types/brands";
 import { ListWithCards } from "@/types";
 import useOptimisticLists from "@/hooks/useOptimisticLists";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { moveCard, sortCard } from "@/lib/supabase/queries";
 import { toast } from "react-toastify";
-import NewList from "./NewList";
+import NewList from "./modals/NewList";
 
 interface BoardProps {
     id: number;

@@ -24,10 +24,13 @@ export default function NewList({ createList }: NewListProps) {
         reset();
     };
 
-    return <div className="flex flex-col gap-8 ml-4 shrink-0 grow-0 overflow-clip bg-linear-to-br from-white/5 to-white/10 shadow-xl border border-white/20 backdrop-blur-md p-8 rounded-xl w-74 max-w-76 min-h-0 max-h-full">
+    return <div data-testid="newListContainer" className="flex flex-col gap-8 ml-4 shrink-0 grow-0 overflow-clip bg-linear-to-br from-white/5 to-white/10 shadow-xl border border-white/20 backdrop-blur-md p-8 rounded-xl w-74 max-w-76 min-h-0 max-h-full">
         {
             isListCreating
-                ? <form className="flex flex-col items-start gap-4 text-xl"
+                ? <form 
+                    name="New list form"
+                    aria-label="New list form"
+                    className="flex flex-col items-start gap-4 text-xl"
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <input
