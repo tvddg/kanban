@@ -168,11 +168,14 @@ export default function useOptimisticLists({
             }
             case "CREATE_LIST": {
                 const { name, position } = action.payload;
+                const exists = state.find(li => li.id < 0 && li.name === name);
+                if (exists) 
+                    return state;
                 
                 return [
                     ...state,
                     {
-                        id: state.length + 1 as ListId,
+                        id: -Date.now() as ListId,
                         board_id: boardId as BoardId,
                         created_at: new Date().toLocaleString(),
                         name,
