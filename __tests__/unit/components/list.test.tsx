@@ -1,7 +1,8 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import List from "@/components/List";
 import { CardId, ListId } from "@/types/brands";
 import { ICard } from "@/types";
+import { jest } from "@jest/globals";
 
 const cards: ICard[] = [
     {
@@ -31,6 +32,7 @@ describe("List component", () => {
                 handleAddCard={() => {}}
                 handleDeleteCard={() => {}}
                 handleEditCard={() => {}}
+                handleDeleteList={() => {console.log(`DELETED LIST 1`)}}
             />)
         
         const headerElement = screen.getByRole('banner');
@@ -39,6 +41,9 @@ describe("List component", () => {
         const titleElement= screen.getByRole('heading');
         expect(titleElement).toBeInTheDocument();
         expect(titleElement).toHaveTextContent("Test list");
+
+        const deleteIcon = screen.getByAltText("Delete list icon");
+        expect(deleteIcon).toBeInTheDocument();
 
         const fallbackElement = screen.getByText(/nothing here yet/i);
         expect(fallbackElement).toBeInTheDocument();
@@ -57,6 +62,7 @@ describe("List component", () => {
                 handleAddCard={() => {}}
                 handleDeleteCard={() => {}}
                 handleEditCard={() => {}}
+                handleDeleteList={() => {console.log(`DELETED LIST 1`)}}
             />)
         });
 
@@ -75,7 +81,21 @@ describe("List component", () => {
 
             const addCardButton = screen.getByText(/add new card/i);
             expect(addCardButton).toBeInTheDocument();
-        })
+        });
+
+        test("able to be deleted", () => {
+            const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+
+            const headerElement = screen.getByRole("banner");
+            expect(headerElement).toBeInTheDocument();
+
+            const deleteButton = within(headerElement).getByRole("img");
+            expect(deleteButton).toBeInTheDocument();
+
+            fireEvent.click(deleteButton);
+
+            expect(logSpy).toHaveBeenCalledWith("DELETED LIST 1");
+        });
 
         describe("supports card adding", () => {
             test("opens a modal card-adding form", () => {
