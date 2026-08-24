@@ -1,4 +1,4 @@
-import { addCard, createList, deleteCard, getBoard, moveCard, updateCard } from "@/lib/supabase/queries";
+import { addCard, createList, deleteCard, deleteList, getBoard, moveCard, updateCard } from "@/lib/supabase/queries";
 import { ICard, ListWithCards } from "@/types";
 import { BoardId, CardId, ListId } from "@/types/brands";
 import { startTransition, useOptimistic, useState } from "react";
@@ -38,6 +38,11 @@ type ListAction = {
     payload: {
         name: string;
         position: number;
+    }
+} | {
+    type: "DELETE_LIST",
+    payload: {
+        id: ListId
     }
 }
 
@@ -183,6 +188,16 @@ export default function useOptimisticLists({
                         cards: []
                     }
                 ];
+            }
+            case "DELETE_LIST": {
+                const { id } = action.payload;
+                const exists = state.find(li => li.id === id);
+                if (!exists) {
+                    return state;
+                }
+                return [
+                    ...state.filter(li => li.id !== id)
+                ].sort((li1, li2) => li1.position - li2.position);
             }
             default: { 
                 action satisfies never; 
@@ -341,6 +356,33 @@ export default function useOptimisticLists({
         });
     };
 
+    const handleDeleteList = (id: ListId) => {
+        startTransition(async () => {
+            dispatch({
+                type: "DELETE_LIST",
+                payload: { id }
+            });
+
+            try {
+                await deleteList(id);
+                setLists((await getBoard(boardId)).lists);
+            } catch(err) {
+                if (err instanceof Error) {
+                    toast.error(`Error: ${err.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark"
+                    });
+                }
+            }
+        });
+    };
+
     // Return optimistic state and handlers
-    return { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard, handleEditCard, handleCreateNewList };
+    return { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard, handleEditCard, handleCreateNewList, handleDeleteList };
 }

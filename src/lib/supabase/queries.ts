@@ -85,7 +85,17 @@ export async function createList(boardId: BoardId, name: string, position: numbe
         .upsert(newList);
 
     if (error) {
-        console.log(error);
-        throw new Error("Error while creating new list");
+        throw new Error("Could not create new list");
     } 
+}
+
+export async function deleteList(id: ListId) {
+    const { error } = await client
+        .from("lists")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        throw new Error(`Could not delete list ${id}`);
+    }
 }

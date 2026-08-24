@@ -7,6 +7,8 @@ import { useState } from "react";
 import NewCard from "./modals/NewCard";
 import { ICard } from "@/types";
 
+import Image from "next/image";
+
 export interface ListProps {
     id: ListId;
     name: string;
@@ -15,9 +17,10 @@ export interface ListProps {
         description?: string) => void;
     handleDeleteCard: (cardId: CardId) => void;
     handleEditCard: (cardId: CardId, title: string) => void;
+    handleDeleteList: () => void;
 }
 
-export default function List({ id, name, cards, handleAddCard, handleDeleteCard, handleEditCard }: ListProps) {
+export default function List({ id, name, cards, handleAddCard, handleDeleteCard, handleEditCard, handleDeleteList }: ListProps) {
     const { ref } = useDroppable({
         id,
         type: "list"
@@ -37,8 +40,13 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard,
                 className="flex flex-col gap-8 ml-4 shrink-0 grow-0 overflow-clip bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-full shadow-xl"
                 data-testid={`li_${id}`}
             >
-                    <header className="flex shrink-0 rounded-xl h-5">
+                    <header className="flex shrink-0 justify-between items-center rounded-xl h-fit max-h-7">
                         <h2 className="ml-0.5 font-medium">{name}</h2>
+                        <Image alt="Delete list icon" className="cursor-pointer hover:scale-103 duration-75"
+                            src="/delete_icon.svg"
+                            width="40" height="40"
+                            onClick={() => handleDeleteList()}
+                        />
                     </header>
                     <div className="text-lg flex flex-col gap-6 scrollbar-thumb-gray-700 shrink grow min-h-0 overflow-auto">
                         {

@@ -41,7 +41,8 @@ function computeInsertPosition(cardsWithoutMovingCard: { position: number }[], i
 export default function Board({ id, boardLists }: BoardProps) {
     const { optimisticLists, handleAddCard,
         handleMoveCard, handleDeleteCard,
-        handleEditCard, handleCreateNewList } = useOptimisticLists({ boardId: id, boardLists });
+        handleEditCard, handleCreateNewList,
+        handleDeleteList } = useOptimisticLists({ boardId: id, boardLists });
 
     const handleReorderCard = async (operation: DragEndEvent["operation"]) => {
         const { source } = operation;
@@ -128,6 +129,7 @@ export default function Board({ id, boardLists }: BoardProps) {
                                     handleAddCard={(position: number, title: string, description?: string) => handleAddCard(list.id, position, title, description)}
                                     handleDeleteCard={(cardId: CardId) => handleDeleteCard(list.id, cardId)}
                                     handleEditCard={(cardId: CardId, title: string) => handleEditCard(list.id, cardId, title)}
+                                    handleDeleteList={() => handleDeleteList(list.id)}
                                 />
                             )
                         }
