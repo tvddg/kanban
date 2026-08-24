@@ -1,36 +1,34 @@
 import { ListWithCards } from "@/types";
 import { ListAction } from "../actions";
+import { produce } from "immer";
 
 const listReducer = (state: ListWithCards[], action: ListAction) => {
-    switch (action.type) {
-        case "CREATE_LIST": {
-            const { listId, createdAt, boardId, name, position } = action.payload;
-            const exists = state.some(li => li.id === listId);
-            if (exists) return state;
+    return produce(state, draftState => {
+        switch (action.type) {
+            case "CREATE_LIST": {
+                const { listId, createdAt, boardId, name, position } = action.payload;
+                const exists = draftState.some(li => li.id === listId);
+                if (exists) return;
 
-            return [
-                ...state,
-                {
+                draftState.push({
                     id: listId,
                     board_id: boardId,
                     created_at: createdAt,
                     name,
                     position,
                     cards: []
-                }
-            ];
-        }
-        case "DELETE_LIST": {
-            const { id } = action.payload;
-            const exists = state.find(li => li.id === id);
-            if (!exists) {
-                return state;
+                });
+                return;
             }
-            return [
-                ...state.filter(li => li.id !== id)
-            ].sort((li1, li2) => li1.position - li2.position);
+            case "DELETE_LIST": {
+                const { id } = action.payload;
+                const index = state.findIndex(li => li.id === id);
+                if (index !== -1) 
+                    draftState.splice(index, 1);
+                return;
+            }
         }
-    }
+    });
 };
 
 export default listReducer;
