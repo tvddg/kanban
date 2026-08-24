@@ -1,5 +1,5 @@
 import { BoardId, CardId, ListId } from "@/types/brands";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Board from "@/components/Board";
 
 beforeEach(() => {
