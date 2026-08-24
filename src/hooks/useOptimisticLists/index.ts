@@ -19,6 +19,7 @@ export default function useOptimisticLists({
     const [optimisticLists, dispatch] = useOptimistic(lists, rootReducer);
 
     // define a transition
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars 
     const [_, startTransition] = useTransition();
 
     // define a common source of truth updating function

@@ -1,7 +1,9 @@
 import handleCreateList from "./createList";
 import handleDeleteList from "./deleteList";
 
-export default {
-    createList: handleCreateList,
-    deleteList: handleDeleteList
+const listHandlers = {
+    handleCreateList,
+    handleDeleteList
 };
+
+export default listHandlers;

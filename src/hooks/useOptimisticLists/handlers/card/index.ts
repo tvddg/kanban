@@ -3,9 +3,11 @@ import handleDeleteCard from "./deleteCard";
 import handleEditCard from "./editCard";
 import handleMoveCard from "./moveCard";
 
-export default { 
+const cardHandlers = { 
     addCard: handleAddCard, 
     deleteCard: handleDeleteCard, 
     editCard: handleEditCard, 
     moveCard: handleMoveCard 
 };
+
+export default cardHandlers;
