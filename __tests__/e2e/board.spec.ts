@@ -151,9 +151,26 @@ test("creates a new list", async ({ page }) => {
     await inputField.fill(`Test list ${TEST_TIMESTAMP}`);
     await okButton.click();
 
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(560);
 
     // final check
     await expect(page.getByText("Create new list")).toBeVisible();
     await expect(page.getByText(`Test list ${TEST_TIMESTAMP}`)).toBeVisible();
+});
+
+test("deletes existing list", async ({ page }) => {
+    await page.goto("/board/1");
+
+    const listTitle = page.getByText(`Test list ${TEST_TIMESTAMP}`);
+    await expect(listTitle).toBeVisible();
+
+    const header = page.locator("header", { has: listTitle });
+    await expect(header).toBeVisible();
+
+    const deleteButton = header.getByAltText("Delete list icon");
+    await expect(deleteButton).toBeVisible();
+
+    await deleteButton.click();
+
+    await expect(page.getByText(`Test list ${TEST_TIMESTAMP}`)).not.toBeVisible();
 });
