@@ -1,21 +1,19 @@
 import { ListWithCards } from "@/types";
 import { ListAction } from "../actions";
-import { BoardId, ListId } from "@/types/brands";
 
 const listReducer = (state: ListWithCards[], action: ListAction) => {
     switch (action.type) {
         case "CREATE_LIST": {
-            const { boardId, name, position } = action.payload;
-            const exists = state.find(li => li.id < 0 && li.name === name);
-            if (exists)
-                return state;
+            const { listId, createdAt, boardId, name, position } = action.payload;
+            const exists = state.some(li => li.id === listId);
+            if (exists) return state;
 
             return [
                 ...state,
                 {
-                    id: -Date.now() as ListId,
+                    id: listId,
                     board_id: boardId,
-                    created_at: new Date().toLocaleString(),
+                    created_at: createdAt,
                     name,
                     position,
                     cards: []

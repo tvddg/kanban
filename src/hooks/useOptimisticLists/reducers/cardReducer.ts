@@ -1,38 +1,31 @@
 import { ICard, ListWithCards } from "@/types";
 import { CardAction } from "../actions";
-import { CardId } from "@/types/brands";
 
 const cardReducer = (state: ListWithCards[], action: CardAction) => {
     switch (action.type) {
         case "ADD_CARD":
             {
                 const targetList = state.find(list => list.id === action.payload.listId);
-                if (targetList === undefined) {
-                    return state;
-                }
-                const isPresent = targetList.cards.find(card => card.id < 0) !== undefined;
-                if (isPresent) {
-                    return state;
-                }
+                if (!targetList) return state;
+
+                const isPresent = targetList.cards.some(card => card.id === action.payload.cardId);
+                if (isPresent) return state;
 
                 const card: ICard = {
-                    created_at: (new Date).toLocaleDateString('sv-SE'),
+                    created_at: action.payload.createdAt,
                     description: action.payload.description ?? null,
-                    id: Date.now() * -1 as CardId,
+                    id: action.payload.cardId,
                     list_id: action.payload.listId,
                     position: action.payload.position,
                     title: action.payload.title
                 }
-                return [
-                    ...(state.filter(list => list.id !== targetList.id)),
-                    {
-                        ...targetList,
-                        cards: [
-                            ...targetList.cards,
-                            card
-                        ]
+                return state.map(list => {
+                    if (list.id !== targetList.id) return list;
+                    return {
+                        ...list,
+                        cards: [...list.cards, card]
                     }
-                ].sort((li1, li2) => li1.position - li2.position);
+                }).sort((li1, li2) => li1.position - li2.position);
             }
         case "MOVE_CARD": {
             const { cardId, sourceListId, targetListId, position } = action.payload;

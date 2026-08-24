@@ -9,6 +9,7 @@ const rootReducer = (state: ListWithCards[], action: ListAction | CardAction) =>
     } else if (isListAction(action)) {
         return listReducer(state, action);
     }
+
     return state;
 };
 

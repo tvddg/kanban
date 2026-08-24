@@ -1,8 +1,14 @@
-import { startTransition } from "react";
 import { ListAction } from "../../actions";
-import { BoardId } from "@/types/brands";
+import { BoardId, ListId } from "@/types/brands";
 import { createList } from "@/lib/supabase/queries";
 import showToastError from "@/utils/showToastError";
+import { TransitionStartFunction } from "react";
+
+interface UtilityFunctions {
+    dispatch: (action: ListAction) => void;
+    updateLists: () => Promise<void>;
+    startTransition: TransitionStartFunction
+}
 
 interface CreateListProps {
     boardId: BoardId;
@@ -11,14 +17,15 @@ interface CreateListProps {
 }
 
 export default function handleCreateList(
-    dispatch: (action: ListAction) => void,
-    updateLists: () => Promise<void>,
+    { dispatch, updateLists, startTransition }: UtilityFunctions,
     { boardId, name, position }: CreateListProps
 ) {
+    const listId = Date.now() * -1 as ListId;
+    const createdAt = new Date().toLocaleDateString("sv-SE");
     startTransition(async () => {
         dispatch({
             type: "CREATE_LIST",
-            payload: { boardId, name, position }
+            payload: { listId, createdAt, boardId, name, position }
         });
 
         try {

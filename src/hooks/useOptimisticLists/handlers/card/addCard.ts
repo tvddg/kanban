@@ -1,8 +1,14 @@
-import { ListId } from "@/types/brands";
-import { startTransition } from "react";
+import { CardId, ListId } from "@/types/brands";
+import { TransitionStartFunction } from "react";
 import { CardAction } from "../../actions";
 import { addCard } from "@/lib/supabase/queries";
 import showToastError from "@/utils/showToastError";
+
+interface UtilityFunctions {
+    dispatch: (action: CardAction) => void;
+    updateLists: () => Promise<void>;
+    startTransition: TransitionStartFunction
+}
 
 interface AddCardProps {
     listId: ListId;
@@ -12,23 +18,24 @@ interface AddCardProps {
 }
 
 export default function handleAddCard(
-    dispatch: (action: CardAction) => void,
-    updateLists: () => Promise<void>,
+    { dispatch, updateLists, startTransition }: UtilityFunctions,
     { listId, position, title, description }: AddCardProps
 ) {
-    startTransition(() => {
+    const createdAt = new Date().toLocaleDateString("sv-SE");
+    const id = Date.now() * -1 as CardId;
+
+    startTransition(async () => {
         dispatch({
             type: "ADD_CARD",
             payload: {
+                cardId: id,
+                createdAt,
                 listId,
                 title,
                 position,
                 description
             }
         });
-    });
-
-    (async () => {
         try {
             await addCard(
                 listId,
@@ -44,5 +51,5 @@ export default function handleAddCard(
                 showToastError();
             }
         }
-    })()
+    });
 }

@@ -1,8 +1,14 @@
 import { CardId, ListId } from "@/types/brands";
-import { startTransition } from "react";
+import { TransitionStartFunction } from "react";
 import { CardAction } from "../../actions";
 import showToastError from "@/utils/showToastError";
 import { deleteCard } from "@/lib/supabase/queries";
+
+interface UtilityFunctions {
+    dispatch: (action: CardAction) => void;
+    updateLists: () => Promise<void>;
+    startTransition: TransitionStartFunction
+}
 
 interface DeleteCardProps {
     cardId: CardId;
@@ -10,8 +16,7 @@ interface DeleteCardProps {
 }
 
 export default function handleDeleteCard(
-    dispatch: (action: CardAction) => void,
-    updateLists: () => Promise<void>,
+    { dispatch, updateLists, startTransition }: UtilityFunctions,
     { listId, cardId }: DeleteCardProps
 ) {
     startTransition(async () => {

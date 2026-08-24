@@ -51,7 +51,7 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard,
                     <div className="text-lg flex flex-col gap-6 scrollbar-thumb-gray-700 shrink grow min-h-0 overflow-auto">
                         {
                             cards.length > 0 
-                            ? cards.sort((c1, c2) => c2.position - c1.position).map((card, index) =>
+                            ? cards.map((card, index) =>
                                     <Card 
                                         key={card.id} 
                                         title={card.title} 

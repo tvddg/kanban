@@ -15,9 +15,14 @@ export default async function BoardRouter({ params }: BoardRouterProps) {
     if (isNaN(boardId))
         notFound();
     const board = await getBoard(boardId);
+    const sortedLists = board.lists
+            .map(list => ({
+                ...list,
+                cards: [...list.cards].sort((c1, c2) => c2.position - c1.position)
+            })).sort((li1, li2) => li1.position - li2.position);
 
     return <>
         <Header name={board.name}/>
-        <Board id={boardId} boardLists={board.lists} />
+        <Board id={boardId} boardLists={sortedLists} />
     </>
 }

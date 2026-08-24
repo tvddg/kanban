@@ -1,10 +1,10 @@
 import { BoardId, CardId, ListId } from "@/types/brands";
 
-type ListActionTypes = "CREATE_LIST" | "DELETE_LIST";
-
 export type CardAction = {
     type: "ADD_CARD",
     payload: { 
+        cardId: CardId;
+        createdAt: string;
         listId: ListId;
         title: string;
         position: number;
@@ -36,6 +36,8 @@ export type CardAction = {
 export type ListAction = {
     type: "CREATE_LIST",
     payload: {
+        listId: ListId;
+        createdAt: string;
         boardId: BoardId;
         name: string;
         position: number;
@@ -47,8 +49,9 @@ export type ListAction = {
     }
 }
 
+// TYPE GUARDS for actions
 export function isCardAction(action: any): action is CardAction {
-    if (!action || !(action.type === "object") 
+    if (!action || !(typeof action === "object") 
         || !("type" in action && "payload" in action)) {
         return false;
     }
@@ -64,7 +67,7 @@ export function isCardAction(action: any): action is CardAction {
 }
 
 export function isListAction(action: any): action is ListAction {
-    if (!action || !(action.type === "object") 
+    if (!action || !(typeof action === "object") 
         || !("type" in action && "payload" in action)) {
         return false;
     }

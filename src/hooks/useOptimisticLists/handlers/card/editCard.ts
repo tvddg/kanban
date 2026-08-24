@@ -1,8 +1,14 @@
 import { CardId, ListId } from "@/types/brands";
-import { startTransition } from "react";
 import { CardAction } from "../../actions";
 import showToastError from "@/utils/showToastError";
 import { updateCard } from "@/lib/supabase/queries";
+import { TransitionStartFunction } from "react";
+
+interface UtilityFunctions {
+    dispatch: (action: CardAction) => void;
+    updateLists: () => Promise<void>;
+    startTransition: TransitionStartFunction
+}
 
 interface EditCardProps {
     listId: ListId;
@@ -11,8 +17,7 @@ interface EditCardProps {
 }
 
 export default function handleEditCard(
-    dispatch: (action: CardAction) => void,
-    updateLists: () => Promise<void>,
+    { dispatch, updateLists, startTransition }: UtilityFunctions,
     { listId, cardId, title }: EditCardProps
 ) {
     startTransition(async () => {

@@ -1,8 +1,14 @@
 import { CardId, ListId } from "@/types/brands";
-import { startTransition } from "react";
 import { CardAction } from "../../actions";
 import showToastError from "@/utils/showToastError";
 import { moveCard } from "@/lib/supabase/queries";
+import { TransitionStartFunction } from "react";
+
+interface UtilityFunctions {
+    dispatch: (action: CardAction) => void;
+    updateLists: () => Promise<void>;
+    startTransition: TransitionStartFunction
+}
 
 interface MoveCardProps {
     cardId: CardId;
@@ -12,8 +18,7 @@ interface MoveCardProps {
 }
 
 export default function handleMoveCard(
-    dispatch: (action: CardAction) => void,
-    updateLists: () => Promise<void>,
+    { dispatch, updateLists, startTransition }: UtilityFunctions,
     { cardId, sourceListId, targetListId, position }: MoveCardProps
 ) {
     startTransition(async () => {
