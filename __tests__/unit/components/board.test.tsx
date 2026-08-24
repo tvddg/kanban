@@ -33,5 +33,10 @@ describe("Board component", () => {
 
         const cardTitle = screen.getByText("Test card");
         expect(cardTitle).toBeInTheDocument();
+
+        const newListTitle = screen.getByText("Create new list");
+        expect(newListTitle).toBeInTheDocument();
+        const newListIcon = screen.getByAltText("Create new list icon");
+        expect(newListIcon).toBeInTheDocument();
     })
 });

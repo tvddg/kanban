@@ -2,7 +2,7 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 
-interface ListModalProps {
+interface NewCardProps {
     addCard: (title: string, description?: string) => void;
     toggleModal: () => void;
 }
@@ -11,7 +11,7 @@ interface ModalForm {
     title: string;
 }
 
-export default function ListModal({ addCard, toggleModal }: ListModalProps) {
+export default function NewCard({ addCard, toggleModal }: NewCardProps) {
     const { register, handleSubmit } = useForm<ModalForm>();
 
     const onSubmit: SubmitHandler<ModalForm> = ({ title }) => {

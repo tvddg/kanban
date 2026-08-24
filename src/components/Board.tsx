@@ -2,13 +2,14 @@
 
 import { DragDropProvider, DragEndEvent } from "@dnd-kit/react";
 import { PointerSensor, PointerActivationConstraints } from "@dnd-kit/dom"
-import List from "./List/List";
+import List from "./List";
 import { CardId, ListId } from "@/types/brands";
 import { ListWithCards } from "@/types";
 import useOptimisticLists from "@/hooks/useOptimisticLists";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { moveCard, sortCard } from "@/lib/supabase/queries";
 import { toast } from "react-toastify";
+import NewList from "./modals/NewList";
 
 interface BoardProps {
     id: number;
@@ -40,7 +41,8 @@ function computeInsertPosition(cardsWithoutMovingCard: { position: number }[], i
 export default function Board({ id, boardLists }: BoardProps) {
     const { optimisticLists, handleAddCard,
         handleMoveCard, handleDeleteCard,
-        handleEditCard } = useOptimisticLists({ boardId: id, boardLists });
+        handleEditCard, handleCreateNewList,
+        handleDeleteList } = useOptimisticLists({ boardId: id, boardLists });
 
     const handleReorderCard = async (operation: DragEndEvent["operation"]) => {
         const { source } = operation;
@@ -127,9 +129,14 @@ export default function Board({ id, boardLists }: BoardProps) {
                                     handleAddCard={(position: number, title: string, description?: string) => handleAddCard(list.id, position, title, description)}
                                     handleDeleteCard={(cardId: CardId) => handleDeleteCard(list.id, cardId)}
                                     handleEditCard={(cardId: CardId, title: string) => handleEditCard(list.id, cardId, title)}
+                                    handleDeleteList={() => handleDeleteList(list.id)}
                                 />
                             )
                         }
+                        <NewList createList={(name: string) => handleCreateNewList(name, optimisticLists.length 
+                            ? (optimisticLists.at(-1)?.position ?? 0) + 1 
+                            : 1
+                        )}/>
                     </section>
                 </DragDropProvider>
             </div>

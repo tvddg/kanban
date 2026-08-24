@@ -1,6 +1,6 @@
-import { addCard, deleteCard, getBoard, moveCard, updateCard } from "@/lib/supabase/queries";
+import { addCard, createList, deleteCard, deleteList, getBoard, moveCard, updateCard } from "@/lib/supabase/queries";
 import { ICard, ListWithCards } from "@/types";
-import { CardId, ListId } from "@/types/brands";
+import { BoardId, CardId, ListId } from "@/types/brands";
 import { startTransition, useOptimistic, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -32,6 +32,17 @@ type ListAction = {
         listId: ListId,
         cardId: CardId,
         title: string
+    }
+} | {
+    type: "CREATE_LIST",
+    payload: {
+        name: string;
+        position: number;
+    }
+} | {
+    type: "DELETE_LIST",
+    payload: {
+        id: ListId
     }
 }
 
@@ -158,6 +169,34 @@ export default function useOptimisticLists({
                             }
                         ].sort((c1, c2) => c2.position - c1.position)
                     }
+                ].sort((li1, li2) => li1.position - li2.position);
+            }
+            case "CREATE_LIST": {
+                const { name, position } = action.payload;
+                const exists = state.find(li => li.id < 0 && li.name === name);
+                if (exists) 
+                    return state;
+                
+                return [
+                    ...state,
+                    {
+                        id: -Date.now() as ListId,
+                        board_id: boardId as BoardId,
+                        created_at: new Date().toLocaleString(),
+                        name,
+                        position,
+                        cards: []
+                    }
+                ];
+            }
+            case "DELETE_LIST": {
+                const { id } = action.payload;
+                const exists = state.find(li => li.id === id);
+                if (!exists) {
+                    return state;
+                }
+                return [
+                    ...state.filter(li => li.id !== id)
                 ].sort((li1, li2) => li1.position - li2.position);
             }
             default: { 
@@ -291,6 +330,59 @@ export default function useOptimisticLists({
         });
     }
 
+    const handleCreateNewList = (name: string, position: number) => {
+        startTransition(async () => {
+            dispatch({
+                type: "CREATE_LIST",
+                payload: { name, position }
+            });
+
+            try {
+                await createList(boardId as BoardId, name, position);
+                setLists((await getBoard(boardId)).lists);
+            } catch (err) {
+                if (err instanceof Error)
+                    toast.error(`Error: ${err.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark"
+                    });
+            }
+        });
+    };
+
+    const handleDeleteList = (id: ListId) => {
+        startTransition(async () => {
+            dispatch({
+                type: "DELETE_LIST",
+                payload: { id }
+            });
+
+            try {
+                await deleteList(id);
+                setLists((await getBoard(boardId)).lists);
+            } catch(err) {
+                if (err instanceof Error) {
+                    toast.error(`Error: ${err.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark"
+                    });
+                }
+            }
+        });
+    };
+
     // Return optimistic state and handlers
-    return { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard, handleEditCard };
+    return { optimisticLists, handleAddCard, handleMoveCard, handleDeleteCard, handleEditCard, handleCreateNewList, handleDeleteList };
 }
