@@ -15,7 +15,7 @@ export default function handleDragEnd(
         return;
 
     if (e.canceled) {
-        void refreshLists();
+        refreshLists();
         return;
     }
 
