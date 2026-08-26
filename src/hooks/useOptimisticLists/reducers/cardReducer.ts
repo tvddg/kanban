@@ -38,17 +38,20 @@ const cardReducer = (state: ListWithCards[], action: CardAction) => {
                 if (!sourceList || !targetList)
                     throw new Error(`List not found`);
 
-                const oldCard = sourceList.cards.find(c => c.id === cardId);
-                if (!oldCard) return;
+                const card = sourceList.cards.find(c => c.id === cardId);
+                if (!card) return;
 
-                sourceList.cards = sourceList.cards.filter(c => c.id !== oldCard.id);
+                sourceList.cards.splice(
+                    sourceList.cards.findIndex(c => c.id === card.id),
+                    1
+                );
 
-                targetList.cards.push({
-                    ...oldCard,
-                    list_id: targetListId,
-                    position
-                });
+                card.list_id = targetListId;
+                card.position = position;
+
+                targetList.cards.push(card);
                 targetList.cards.sort((c1, c2) => c2.position - c1.position);
+
                 return;
             }
             case "DELETE_CARD": {

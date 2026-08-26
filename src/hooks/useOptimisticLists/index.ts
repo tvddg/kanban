@@ -3,6 +3,7 @@ import { useOptimistic, useState, useTransition } from "react";
 import rootReducer from "./reducers";
 import getAllHandlers from "./handlers";
 import { getBoard } from "@/lib/supabase/queries";
+import { CardAction, ListAction } from "./actions";
 
 interface UseOptimisticListsProps {
     boardId: number; 
@@ -17,6 +18,10 @@ export default function useOptimisticLists({
 
     // optimistic lists
     const [optimisticLists, dispatch] = useOptimistic(lists, rootReducer);
+    
+    // TODO patch for useSortable optimistic updates
+    const applyAction = (action: ListAction | CardAction) => 
+        setLists(prev => rootReducer(prev, action));
 
     // define a transition
     // eslint-disable-next-line @typescript-eslint/no-unused-vars 
@@ -38,8 +43,10 @@ export default function useOptimisticLists({
     const handlers = getAllHandlers(
         dispatch,
         startTransition,
-        updateLists
+        updateLists,
+        applyAction
     );
 
-    return { optimisticLists, handlers };
+    // exposed so a canceled drag can throw away the previewed state
+    return { optimisticLists, handlers, refreshLists: updateLists };
 }

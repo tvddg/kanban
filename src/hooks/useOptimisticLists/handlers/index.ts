@@ -10,13 +10,14 @@ type WrappedHandlers<THandlers extends GenericHandlersMap> = {
     [Key in keyof THandlers]: (props: Parameters<THandlers[Key]>[1]) => ReturnType<THandlers[Key]>;
 };
 
-type UnitedHandlers = WrappedHandlers<typeof cardHandlers> & 
+export type UnitedHandlers = WrappedHandlers<typeof cardHandlers> & 
     WrappedHandlers<typeof listHandlers>;
 
 export default function getAllHandlers(
     dispatch: (action: ListAction | CardAction) => void,
     startTransition: TransitionStartFunction,
-    updateLists: () => Promise<void>
+    updateLists: () => Promise<void>,
+    applyAction: (action: ListAction | CardAction) => void
 ) {
     
     return {
@@ -33,6 +34,8 @@ export default function getAllHandlers(
                     handler({ dispatch, updateLists, startTransition }, props);
                 return [key, wrappedHandler];
             })
-        )
+        ),
+        previewMoveCard: (props: Parameters<typeof cardHandlers.previewMoveCard>[1]) =>
+            cardHandlers.previewMoveCard({ dispatch: applyAction }, props)
     } as unknown as UnitedHandlers;
 }
