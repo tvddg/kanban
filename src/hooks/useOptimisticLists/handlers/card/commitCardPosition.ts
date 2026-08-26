@@ -1,6 +1,6 @@
 import { CardId, ListId } from "@/types/brands";
 import showToastError from "@/utils/showToastError";
-import { moveCard } from "@/lib/supabase/queries";
+import { moveCard } from "@/lib/supabase/queries/card";
 import UtilityFunctions from "../utilityFunctions";
 
 interface CommitCardPositionProps {

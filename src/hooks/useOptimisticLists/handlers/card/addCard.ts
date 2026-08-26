@@ -1,5 +1,5 @@
 import { CardId, ListId } from "@/types/brands";
-import { addCard } from "@/lib/supabase/queries";
+import { addCard } from "@/lib/supabase/queries/card";
 import showToastError from "@/utils/showToastError";
 import UtilityFunctions from "../utilityFunctions";
 
