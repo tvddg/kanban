@@ -1,9 +1,5 @@
 import { CardId, ListId } from "@/types/brands";
-import { CardAction } from "../../actions";
-
-interface UtilityFunctions {
-    dispatch: (action: CardAction) => void;
-}
+import UtilityFunctions from "../utilityFunctions";
 
 interface PreviewMoveCardProps {
     cardId: CardId;

@@ -1,12 +1,7 @@
 import { CardId, ListId } from "@/types/brands";
 import showToastError from "@/utils/showToastError";
 import { moveCard } from "@/lib/supabase/queries";
-import { TransitionStartFunction } from "react";
-
-interface UtilityFunctions {
-    updateLists: () => Promise<void>;
-    startTransition: TransitionStartFunction;
-}
+import UtilityFunctions from "../utilityFunctions";
 
 interface CommitCardPositionProps {
     cardId: CardId;

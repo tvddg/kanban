@@ -50,7 +50,7 @@ export type ListAction = {
 }
 
 // TYPE GUARDS for actions
-export function isCardAction(action: any): action is CardAction {
+export function isCardAction(action: { type: string, payload: object }): action is CardAction {
     if (!action || !(typeof action === "object") 
         || !("type" in action && "payload" in action)) {
         return false;
@@ -66,7 +66,7 @@ export function isCardAction(action: any): action is CardAction {
     return action.type in cardActionTypes;
 }
 
-export function isListAction(action: any): action is ListAction {
+export function isListAction(action: { type: string, payload: object }): action is ListAction {
     if (!action || !(typeof action === "object") 
         || !("type" in action && "payload" in action)) {
         return false;

@@ -1,14 +1,7 @@
 import { CardId, ListId } from "@/types/brands";
-import { TransitionStartFunction } from "react";
-import { CardAction } from "../../actions";
 import showToastError from "@/utils/showToastError";
 import { deleteCard } from "@/lib/supabase/queries";
-
-interface UtilityFunctions {
-    dispatch: (action: CardAction) => void;
-    updateLists: () => Promise<void>;
-    startTransition: TransitionStartFunction
-}
+import UtilityFunctions from "../utilityFunctions";
 
 interface DeleteCardProps {
     cardId: CardId;

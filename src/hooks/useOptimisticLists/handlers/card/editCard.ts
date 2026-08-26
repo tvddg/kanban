@@ -1,14 +1,7 @@
 import { CardId, ListId } from "@/types/brands";
-import { CardAction } from "../../actions";
 import showToastError from "@/utils/showToastError";
 import { updateCard } from "@/lib/supabase/queries";
-import { TransitionStartFunction } from "react";
-
-interface UtilityFunctions {
-    dispatch: (action: CardAction) => void;
-    updateLists: () => Promise<void>;
-    startTransition: TransitionStartFunction
-}
+import UtilityFunctions from "../utilityFunctions";
 
 interface EditCardProps {
     listId: ListId;
