@@ -29,16 +29,6 @@ export default function DndCardsProvider(
         onDragEnd={(e) => handleDragEnd(e, boardLists, handlers.commitCardPosition, refreshLists)}
     >
         {children}
-        {/*
-          * Without an overlay dnd-kit drags the card's own node: it plants a
-          * placeholder next to it and, once the drop finishes, puts that node
-          * back with placeholder.replaceWith(). Moving a card between lists
-          * makes React unmount the old node and mount a new one, so the node
-          * dnd-kit puts back is already orphaned and the tree ends up with two
-          * copies of the same card. An overlay skips the placeholder entirely
-          * (see Feedback plugin: placeholder is null whenever an overlay
-          * exists), leaving the card's DOM to React alone.
-          */}
         <DragOverlay>
             {(source) => <span
                 className="flex justify-between border-solid text-ellipsis whitespace-nowrap overflow-clip border-2 shadow-2xs border-cyan-500 rounded-xl p-2 bg-gray-800 text-lg"

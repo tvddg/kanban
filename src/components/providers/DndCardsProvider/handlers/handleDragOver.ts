@@ -7,13 +7,6 @@ import { isSortable } from "@dnd-kit/react/sortable";
 
 const LIST_DROP_POSITION = 1;
 
-/**
- * Keeps local state in step with the pointer for the whole drag.
- *
- * This is what stops dnd-kit from rearranging the DOM behind React's back: its
- * OptimisticSortingPlugin only reorders elements itself when it finds that
- * React has not already applied the new order.
- */
 export default function handleDragOver(
     e: DragOverEvent,
     boardLists: ListWithCards[],
@@ -25,8 +18,6 @@ export default function handleDragOver(
 
     const cardId = source.id as CardId;
 
-    // where the card sits right now according to state, which is the only
-    // reliable source list — dnd-kit may already have moved its own group
     const currentList = boardLists.find(
         list => list.cards.some(card => card.id === cardId)
     );
