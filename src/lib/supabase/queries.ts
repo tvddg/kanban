@@ -43,16 +43,6 @@ export async function moveCard(cardId: CardId, listId: ListId, position: number)
         throw new Error("Could not move existing card");
 }
 
-export async function sortCard(cardId: CardId, position: number) {
-    const { error } = await client
-        .from("cards")
-        .update({ position })
-        .eq("id", cardId);
-
-    if (error)
-        throw new Error("Could not move existing card");
-}
-
 export async function deleteCard(cardId: CardId) {
     const { error } = await client
         .from('cards')

@@ -20,7 +20,8 @@ export default function Card({ id, index, listId, title, handleDeleteCard, handl
         index: index,
         group: listId,
         data: {
-            list_id: listId
+            list_id: listId,
+            title
         }
     });
     
