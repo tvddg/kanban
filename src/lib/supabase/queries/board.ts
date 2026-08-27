@@ -1,3 +1,4 @@
+import { BoardId } from "@/types/brands";
 import client from "../client";
 import { BoardWithLists, IBoard, INewBoard } from "@/types";
 
@@ -34,7 +35,16 @@ export async function createBoard(name: string) {
         .single();
     
     if (error) 
-        throw new Error(`Error while creating new board "${name}"`);
+        throw new Error(`Failed to create board"${name}"`);
 
     return data;
+}
+
+export async function deleteBoard(id: BoardId) {
+    const { error } = await client
+        .from("boards")
+        .delete()
+        .eq("id", id);
+
+    if (error) throw new Error(`Failed to delete board`)
 }

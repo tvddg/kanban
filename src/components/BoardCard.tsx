@@ -1,7 +1,7 @@
 "use client";
 
 import { BoardId } from "@/types/brands";
-import formatDateString from "@/utils/formatDateString";
+import formatDateString from "@/utils/formatters/formatDateString";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Activity, useState } from "react";
@@ -18,15 +18,15 @@ export default function BoardCard({ id, name, createdAt }: BoardCardProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const formattedCreatedAt = formatDateString(createdAt);
-    return <div className="relative flex justify-between p-6 pt-8 pb-8 md:w-96 h-40 rounded-xl bg-linear-to-b from-gray-900 to-gray-800 shadow-xl">
+    return <div className="relative min-w-0 flex justify-between p-6 pt-8 pb-8 md:min-w-96 h-40 rounded-xl bg-linear-to-b from-gray-900 to-gray-800 shadow-xl">
         <div
             data-testid={`boardCard-${id}`}
-            className="flex cursor-pointer align-start justify-between shrink-0 grow-0 "
+            className="flex min-w-0 flex-1 md:w-1/2 cursor-pointer align-start justify-between"
             onClick={() => router.push(`/board/${id}`)}
         >
-            <div className="flex flex-col justify-between">
-                <p className="font-medium">{name}</p>
-                <p className="text-xl opacity-60">Created at: {formattedCreatedAt}</p>
+            <div className="flex min-w-0 w-full gap-4 flex-col justify-between">
+                <p className="min-w-0 font-medium truncate">{name}</p>
+                <p className="w-full grow-0 text-sm md:text-lg opacity-60">Created at: {formattedCreatedAt}</p>
             </div>
         </div>
         <Image

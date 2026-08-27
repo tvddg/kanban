@@ -1,7 +1,7 @@
 "use client";
 
 import { createBoard } from "@/lib/supabase/queries/board";
-import showToastError from "@/utils/showToastError";
+import showToastError from "@/utils/toasts/showToastError";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

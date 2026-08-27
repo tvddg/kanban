@@ -1,6 +1,6 @@
 import { ListAction } from "../../actions";
 import { ListId } from "@/types/brands";
-import showToastError from "@/utils/showToastError";
+import showToastError from "@/utils/toasts/showToastError";
 import { deleteList } from "@/lib/supabase/queries/list";
 import { TransitionStartFunction } from "react";
 

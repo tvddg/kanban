@@ -1,6 +1,6 @@
 import { CardId, ListId } from "@/types/brands";
 import { addCard } from "@/lib/supabase/queries/card";
-import showToastError from "@/utils/showToastError";
+import showToastError from "@/utils/toasts/showToastError";
 import UtilityFunctions from "../utilityFunctions";
 
 interface AddCardProps {
