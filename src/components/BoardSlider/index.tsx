@@ -1,6 +1,6 @@
 import { getAllBoards } from "@/lib/supabase/queries/board";
 import BoardCard from "./BoardCard";
-import NewBoard from "./modals/NewBoard";
+import NewBoard from "../modals/NewBoard";
 
 export default async function BoardSlider() {
     const boards = await getAllBoards();
@@ -9,12 +9,12 @@ export default async function BoardSlider() {
         <div className="flex flex-col md:flex-row gap-4 md:gap-8 overflow-scroll max-h-full scrollbar-none">
             <NewBoard />
             {
-                boards.map(board => 
+                boards.map(board =>
                     <BoardCard
                         key={board.id}
                         id={board.id}
                         name={board.name}
-                        createdAt={board.created_at} 
+                        createdAt={board.created_at}
                     />
                 )
             }

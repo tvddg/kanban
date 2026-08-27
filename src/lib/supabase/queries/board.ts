@@ -1,6 +1,6 @@
 import { BoardId } from "@/types/brands";
 import client from "../client";
-import { BoardWithLists, IBoard, INewBoard } from "@/types";
+import { BoardWithLists, IBoard, IBoardUpdate, INewBoard } from "@/types";
 
 export async function getBoard(boardId: number) {
     const { data, error } = await client
@@ -47,4 +47,15 @@ export async function deleteBoard(id: BoardId) {
         .eq("id", id);
 
     if (error) throw new Error(`Failed to delete board`)
+}
+
+export async function renameBoard(id: BoardId, newName: string) {
+    const updatedBoard: IBoardUpdate = { name: newName };
+    
+    const { error } = await client
+        .from('boards')
+        .update(updatedBoard)
+        .eq("id", id);
+
+    if (error) throw new Error("Failed to update board");
 }

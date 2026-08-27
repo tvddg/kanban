@@ -10,7 +10,7 @@ jest.unstable_mockModule("next/navigation", () => ({
     })
 }));
 
-const { default: BoardCard } = await import("@/components/BoardCard");
+const { default: BoardCard } = await import("@/components/BoardSlider/BoardCard");
 
 beforeEach(() => {
     render(

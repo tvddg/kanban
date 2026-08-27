@@ -5,10 +5,10 @@ import formatDateString from "@/utils/formatters/formatDateString";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Activity, useState } from "react";
-import DropdownMenu from "./DropdownMenu/DropdownMenu";
-import { deleteBoard } from "@/lib/supabase/queries/board";
-import showToastError from "@/utils/toasts/showToastError";
-import Loader from "./UI/Loader";
+import DropdownMenu from "../DropdownMenu/DropdownMenu";
+import Loader from "../UI/Loader";
+import { cbDeleteBoard } from "./handlers/deleteBoard";
+import RenameBoard from "../modals/RenameBoard";
 
 interface BoardCardProps {
     id: BoardId;
@@ -16,27 +16,17 @@ interface BoardCardProps {
     createdAt: string;
 }
 
-const handleDeleteBoard = async ({ id, refresh }:
-    { id: BoardId, refresh: () => void }) => {
-    try {
-        await deleteBoard(id);
-        refresh();
-    } catch (err) {
-        if (err instanceof Error)
-            showToastError(err.message);
-        else
-            showToastError();
-    }
-}
-
 export default function BoardCard({ id, name, createdAt }: BoardCardProps) {
     const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isActionLoading, setIsActionLoading] = useState(false);
+
+    const [isRenamingBoard, setIsRenamingBoard] = useState(false);
+    const [isPending, setIsPending] = useState(false);
 
     const formattedCreatedAt = formatDateString(createdAt);
     return <div className="relative min-w-0 flex justify-between p-6 pt-8 pb-8 md:min-w-96 h-40 rounded-xl bg-linear-to-b from-gray-900 to-gray-800 shadow-xl">
-        {isActionLoading
+        {
+            isPending
             ? <div className="absolute inset-0 flex items-center justify-center">
                 <Loader className={"size-12"} />
             </div>
@@ -44,10 +34,17 @@ export default function BoardCard({ id, name, createdAt }: BoardCardProps) {
                 <div
                     data-testid={`boardCard-${id}`}
                     className="flex min-w-0 flex-1 md:w-1/2 cursor-pointer align-start justify-between"
-                    onClick={() => router.push(`/board/${id}`)}
+                    onClick={() => !isRenamingBoard && router.push(`/board/${id}`)}
                 >
                     <div className="flex min-w-0 w-full gap-4 flex-col justify-between">
-                        <p className="min-w-0 font-medium truncate">{name}</p>
+                        {
+                            isRenamingBoard
+                            ? <RenameBoard id={id} submitDisabled={isPending} 
+                                setPending={(val: boolean) => setIsPending(val)}
+                                refresh={() => router.refresh()} 
+                                closeForm={() => setIsRenamingBoard(false)}
+                            />
+                            : <p className="min-w-0 font-medium truncate">{name}</p>}
                         <p className="w-full grow-0 text-sm md:text-lg opacity-60">Created at: {formattedCreatedAt}</p>
                     </div>
                 </div>
@@ -59,16 +56,19 @@ export default function BoardCard({ id, name, createdAt }: BoardCardProps) {
                     <DropdownMenu
                         items={[
                             {
-                                name: "Delete", callback: async () => {
-                                    setIsActionLoading(true);
-                                    await handleDeleteBoard({ id, refresh: () => router.refresh() });
-                                }, imagePath: "/delete_icon.svg"
+                                name: "Delete", callback: () => cbDeleteBoard({
+                                    id,
+                                    refresh: () => router.refresh(),
+                                    setLoading: (val: boolean) => setIsPending(val),
+                                    closeMenu: () => setIsMenuOpen(false)
+                                }), imagePath: "/delete_icon.svg"
                             },
-                            { name: "Edit", callback: () => alert(`EDIT BOARD ${id}`), imagePath: "edit_icon.svg" }
+                            { name: "Rename", callback: () => setIsRenamingBoard(true), imagePath: "edit_icon.svg" }
                         ]}
                         closeMenu={() => setIsMenuOpen(false)}
                     />
                 </Activity>
-            </>}
+            </>
+        }
     </div>
 }

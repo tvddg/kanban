@@ -14,6 +14,7 @@ export type INewCard = Rebrand<TablesInsert<'cards'>, { list_id: ListId }>;
 export type ICardUpdate = Rebrand<TablesUpdate<'cards'>, { list_id: ListId }>;
 export type INewList = Rebrand<TablesInsert<'lists'>, { board_id: BoardId }>;
 export type INewBoard = TablesInsert<'boards'>;
+export type IBoardUpdate = TablesUpdate<'boards'>;
 
 // Nested data types
 export type ListWithCards = IList & { cards: ICard[] };
