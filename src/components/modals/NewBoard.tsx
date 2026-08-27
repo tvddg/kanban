@@ -23,6 +23,7 @@ export default function NewBoard() {
 
     return isCreating
         ? <form 
+            name="New board form"
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4 items-center justify-center shrink-0 grow-0 md:w-96 h-40 rounded-xl bg-linear-to-br from-white/5 to-white/10 border shadow-xl border-white/20 backdrop-blur-md"
         >
@@ -47,7 +48,6 @@ export default function NewBoard() {
                     Cancel
                 </button>
             </div>
-
         </form>
         : <div
             data-testid="createNewBoardPanel"

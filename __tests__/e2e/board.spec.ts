@@ -151,7 +151,7 @@ test("creates a new list", async ({ page }) => {
     await inputField.fill(`Test list ${TEST_TIMESTAMP}`);
     await okButton.click();
 
-    await page.waitForTimeout(560);
+    await page.waitForTimeout(500);
 
     // final check
     await expect(page.getByText("Create new list")).toBeVisible();

@@ -14,11 +14,17 @@ const boards: IBoard[] = [
 
 jest.unstable_mockModule("@/lib/supabase/queries/board", () => ({
     getBoard: jest.fn(),
-    getAllBoards: jest.fn(async () => boards)
+    getAllBoards: jest.fn(async () => boards),
+    createBoard: jest.fn(async (name: string) => {
+        console.log(`CREATED BOARD ${name}`);
+        return { id: 1 };
+    })
 }));
 
 jest.unstable_mockModule("next/navigation", () => ({
-    useRouter: () => ({ push: jest.fn() })
+    useRouter: () => ({ push(url: string) {
+        console.log(`MOCK REDIRECT TO ${url}`)
+    }})
 }));
 
 const { getAllBoards } = await import("@/lib/supabase/queries/board");
