@@ -22,7 +22,7 @@ export default function BoardCard({ id, name, createdAt }: BoardCardProps) {
     >
         <div className="flex justify-between">
             <p className="font-medium">{name}</p>
-            <Image className="text-sm" src="/settings_icon.svg" alt="settings icon" width={40} height={40} />
+            <Image className="text-sm" src="/settings_icon.svg" alt="Settings icon" width={40} height={40} />
         </div>
         <p className="text-xl opacity-60">Created at: {formattedCreatedAt}</p>
     </div>
