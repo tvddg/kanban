@@ -3,6 +3,7 @@ import { jest } from "@jest/globals";
 import { screen, render } from "@testing-library/react";
 import { BoardId } from "@/types/brands";
 import type { IBoard } from "@/types";
+import { deleteBoard } from "@/lib/supabase/queries/board";
 
 const boards: IBoard[] = [
     {
@@ -18,7 +19,9 @@ jest.unstable_mockModule("@/lib/supabase/queries/board", () => ({
     createBoard: jest.fn(async (name: string) => {
         console.log(`CREATED BOARD ${name}`);
         return { id: 1 };
-    })
+    }),
+    deleteBoard: jest.fn(),
+    renameBoard: jest.fn()
 }));
 
 jest.unstable_mockModule("next/navigation", () => ({
