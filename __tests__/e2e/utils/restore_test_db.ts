@@ -7,6 +7,11 @@ const RESTORE_TEST_DB = async () => {
         .gt('id', 3);
 
     await client
+        .from('boards')
+        .delete()
+        .gt("id", 1);
+
+    await client
         .from("lists")
         .delete()
         .gt("id", 2);

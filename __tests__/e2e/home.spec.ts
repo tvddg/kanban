@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+const TEST_TIMESTAMP = Date.now();
+
 test('navigates to the home page', async ({ page }) => {
     await page.goto("/");
 
@@ -46,4 +48,26 @@ test("clicking on board card redirects to that board", async ({ page }) => {
     await page.waitForURL("/board/1");
 
     expect(page.url()).toContain("/board/1");
+});
+
+test('creates new board using "create new board" panel', async ({ page }) => {
+    await page.goto("/");
+
+    const createNewBoardPanel = page.getByTestId("createNewBoardPanel");
+    createNewBoardPanel.click();
+
+    const form = page.getByTestId("createNewBoardForm");
+    await expect(form).toBeVisible();
+
+    const input = form.getByRole("textbox");
+    await expect(input).toBeVisible();
+    await input.fill(`Test Board ${TEST_TIMESTAMP}`);
+
+    const okBtn = form.getByRole("button", { name: "OK" });
+    await expect(okBtn).toBeVisible();
+    okBtn.click();
+    await page.waitForURL("/board/**")
+
+    expect(page.url()).toContain("/board/");
+    await expect(page.getByText(`Test Board ${TEST_TIMESTAMP}`)).toBeVisible();
 });
