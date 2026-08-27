@@ -1,7 +1,7 @@
-export default function Loader() {
-    return <div role="status" className="flex items-center mt-32 flex-col">
+export default function Loader({ className }: { className: string}) {
+    return <div role="status" className="flex items-center flex-col">
         <svg xmlns="http://www.w3.org/2000/svg"
-            className="size-24 animate-[spin_0.8s_linear_infinite] fill-white" viewBox="0 0 24 24"
+            className={`${className} animate-[spin_0.8s_linear_infinite] fill-white`} viewBox="0 0 24 24"
             aria-hidden="true"
         >
             <path
