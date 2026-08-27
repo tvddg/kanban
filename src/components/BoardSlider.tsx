@@ -11,7 +11,7 @@ export default async function BoardSlider() {
                 data-testid="createNewBoardPanel"
                 className="flex flex-col gap-2 items-center justify-center shrink-0 grow-0 md:w-96 h-40 rounded-xl bg-linear-to-br from-white/5 to-white/10 border shadow-xl border-white/20 backdrop-blur-md">
                 <p className="color-white">Create new board</p>
-                <Image src="/plus_icon.svg" alt="Create new list icon" width={30} height={30} />
+                <Image src="/plus_icon.svg" alt="Create new board icon" width={30} height={30} />
             </div>
             {
                 boards.map(board => 
