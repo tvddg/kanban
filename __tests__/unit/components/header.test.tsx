@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import Header from "@/components/UI/header";
+import Header from "@/components/UI/Header";
 
 describe("Header component", () => {
     test("renders header with correct content", () => {

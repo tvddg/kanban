@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import Board from "@/components/Board";
 import { getBoard } from "@/lib/supabase/queries/board";
-import Header from "@/components/UI/header";
+import Header from "@/components/UI/Header";
 
 interface BoardRouterProps {
     params: Promise<{

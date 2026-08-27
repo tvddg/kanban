@@ -1,5 +1,5 @@
 import client from "../client";
-import { BoardWithLists, IBoard } from "@/types";
+import { BoardWithLists, IBoard, INewBoard } from "@/types";
 
 export async function getBoard(boardId: number) {
     const { data, error } = await client
@@ -22,4 +22,19 @@ export async function getAllBoards() {
     if (error) throw new Error("Failed to fetch boards");
     
     return data as IBoard[];
+}
+
+export async function createBoard(name: string) {
+    const board: INewBoard = { name };
+    
+    const { data, error } = await client
+        .from('boards')
+        .insert(board)
+        .select()
+        .single();
+    
+    if (error) 
+        throw new Error(`Error while creating new board "${name}"`);
+
+    return data;
 }
