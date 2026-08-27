@@ -4,6 +4,7 @@ import { BoardId } from "@/types/brands";
 import formatDateString from "@/utils/formatDateString";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Activity, useState } from "react";
 
 interface BoardCardProps {
     id: BoardId;
@@ -13,17 +14,27 @@ interface BoardCardProps {
 
 export default function BoardCard({ id, name, createdAt }: BoardCardProps) {
     const router = useRouter();
-    
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     const formattedCreatedAt = formatDateString(createdAt);
-    return <div
-        data-testid={`boardCard-${id}`}
-        className="flex flex-col cursor-pointer align-start justify-around p-4 shrink-0 grow-0 md:w-96 h-40 rounded-xl bg-linear-to-b from-gray-900 to-gray-800 shadow-xl"
-        onClick={() => router.push(`/board/${id}`)}
-    >
-        <div className="flex justify-between">
-            <p className="font-medium">{name}</p>
-            <Image className="text-sm" src="/settings_icon.svg" alt="Settings icon" width={40} height={40} />
+    return <div className="flex justify-between p-6 pt-8 pb-8 md:w-96 h-40 rounded-xl bg-linear-to-b from-gray-900 to-gray-800 shadow-xl">
+        <div
+            data-testid={`boardCard-${id}`}
+            className="flex cursor-pointer align-start justify-between shrink-0 grow-0 "
+            onClick={() => router.push(`/board/${id}`)}
+        >
+            <div className="flex flex-col justify-between">
+                <p className="font-medium">{name}</p>
+                <p className="text-xl opacity-60">Created at: {formattedCreatedAt}</p>
+            </div>
+
         </div>
-        <p className="text-xl opacity-60">Created at: {formattedCreatedAt}</p>
+        <Image
+            className="text-sm self-start" src="/settings_icon.svg" alt="Settings icon" width={40} height={40}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+        />
+        <Activity mode={isMenuOpen ? "visible" : "hidden"}>
+            <div>Hello</div>
+        </Activity>
     </div>
 }

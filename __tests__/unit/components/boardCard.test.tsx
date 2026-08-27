@@ -24,7 +24,9 @@ beforeEach(() => {
 
 describe("Board Card component", () => {
     test("renders correctly", () => {
-        const card = screen.getByTestId("boardCard-1");
+        const card = screen.getByTestId("boardCard-1").parentElement;
+        if (!card)
+            throw new Error("Card doesn't have a wrapper");
 
         // name and settings icon
         expect(
