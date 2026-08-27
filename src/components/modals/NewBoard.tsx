@@ -1,6 +1,7 @@
 "use client";
 
 import { createBoard } from "@/lib/supabase/queries/board";
+import showToastError from "@/utils/showToastError";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,13 +13,25 @@ export default function NewBoard() {
     const [isRequestSent, setIsRequestSent] = useState(false);
     const {
         register,
-        handleSubmit
+        handleSubmit,
+        reset
     } = useForm<{ name: string }>();
 
     const onSubmit: SubmitHandler<{ name: string }> = async ({ name }) => {
-        setIsRequestSent(true);
-        const { id } = await createBoard(name);
-        router.push(`board/${id}`)
+        try {
+            setIsRequestSent(true);
+            const { id } = await createBoard(name);
+            router.push(`board/${id}`)
+        } catch (err) {
+            if (err instanceof Error) {
+                showToastError(err.message)
+            } else {
+                showToastError();
+            }
+            reset();
+            setIsCreating(false);
+            setIsRequestSent(false);
+        }
     };
 
     return isCreating
