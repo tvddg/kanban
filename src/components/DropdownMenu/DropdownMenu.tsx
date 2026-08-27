@@ -7,6 +7,7 @@ interface DropdownMenuProps {
     items: {
         name: string;
         callback: () => void;
+        imagePath: string;
     }[],
     closeMenu: () => void
 }
@@ -35,12 +36,13 @@ export default function DropdownMenu(
     }, [menuRef, closeMenu])
 
     return <div ref={menuRef} className="absolute right-0 top-0">
-        <div className="w-32 p-3 flex flex-col gap-0.5 text-lg rounded-xl bg-gray-800">
+        <div className="w-32 p-2 flex flex-col gap-0.5 text-lg rounded-xl bg-gray-800">
             {
                 items.map(item => 
                     <MenuItem 
                         key={item.name}
                         name={item.name}
+                        imagePath={item.imagePath}
                         callback={item.callback}
                     />
                 )

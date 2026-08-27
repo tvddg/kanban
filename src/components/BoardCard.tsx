@@ -36,8 +36,8 @@ export default function BoardCard({ id, name, createdAt }: BoardCardProps) {
         <Activity mode={isMenuOpen ? "visible" : "hidden"}>
             <DropdownMenu 
                 items={[
-                    { name: "Delete", callback: () => alert(`DELETE BOARD ${id}`)},
-                    { name: "Edit", callback: () => alert(`EDIT BOARD ${id}`)}
+                    { name: "Delete", callback: () => alert(`DELETE BOARD ${id}`), imagePath: "/delete_icon.svg"},
+                    { name: "Edit", callback: () => alert(`EDIT BOARD ${id}`), imagePath: "edit_icon.svg"}
                 ]}
                 closeMenu={() => setIsMenuOpen(false)}
             />
