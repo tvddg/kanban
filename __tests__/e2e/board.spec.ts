@@ -1,16 +1,16 @@
 import { test, expect } from "@playwright/test";
-import RESTORE_TEST_DB from "./utils/restore_test_db";
+import { RESTORE_LISTS } from "./utils/restore_test_db";
 
 const TEST_TIMESTAMP = Date.now();
 
 test.describe.configure({ mode: "serial" });
 
 test.afterAll(async () => {
-    await RESTORE_TEST_DB();
+    await RESTORE_LISTS();
 })
 
 test("navigates to an existing board page", async ({ page }) => {
-    await page.goto("/board/1");
+    await page.goto("/board/15");
 
     // Correct header with board title
     await expect(page.getByText("Test Board")).toBeVisible();
@@ -76,9 +76,9 @@ test("shows an error on unreachable URL", async ({ page }) => {
 })
 
 test("creates a new card", async ({ page }) => {
-    await page.goto("/board/1");
+    await page.goto("/board/15");
 
-    const secondTestList = page.getByTestId('li_2');
+    const secondTestList = page.getByTestId('li_61');
     
     await secondTestList.getByRole('button', { name: "Add new card" }).click();
 
@@ -92,9 +92,9 @@ test("creates a new card", async ({ page }) => {
 })
 
 test("updates the card", async ({ page }) => {
-    await page.goto("/board/1");
+    await page.goto("/board/15");
     
-    const firstTestList = page.getByTestId('li_1');
+    const firstTestList = page.getByTestId('li_59');
     const cardToUpdate = firstTestList.locator('span', { hasText: "Test Card 1" });
     await cardToUpdate.getByAltText("Edit icon").click();
 
@@ -114,9 +114,9 @@ test("updates the card", async ({ page }) => {
 });
 
 test("deletes a card", async ({ page }) => {
-    await page.goto("/board/1");
+    await page.goto("/board/15");
 
-    const secondTestList = page.getByTestId('li_2');
+    const secondTestList = page.getByTestId('li_61');
     await secondTestList.getByRole('button', { name: "Add new card" }).click();
     await secondTestList.getByRole('textbox').fill("foo");
     await secondTestList.getByRole('button', { name: "Add" }).click();
@@ -129,7 +129,7 @@ test("deletes a card", async ({ page }) => {
 });
 
 test("creates a new list", async ({ page }) => {
-    await page.goto("/board/1");
+    await page.goto("/board/15");
 
     const newListPanel = page.getByTestId("newListContainer").locator('div');
     await expect(newListPanel).toBeVisible();
@@ -159,7 +159,7 @@ test("creates a new list", async ({ page }) => {
 });
 
 test("deletes existing list", async ({ page }) => {
-    await page.goto("/board/1");
+    await page.goto("/board/15");
 
     const listTitle = page.getByText(`Test list ${TEST_TIMESTAMP}`);
     await expect(listTitle).toBeVisible();
