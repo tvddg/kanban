@@ -3,7 +3,6 @@ import { jest } from "@jest/globals";
 import { screen, render } from "@testing-library/react";
 import { BoardId } from "@/types/brands";
 import type { IBoard } from "@/types";
-import { deleteBoard } from "@/lib/supabase/queries/board";
 
 const boards: IBoard[] = [
     {
@@ -31,7 +30,7 @@ jest.unstable_mockModule("next/navigation", () => ({
 }));
 
 const { getAllBoards } = await import("@/lib/supabase/queries/board");
-const { default: BoardSlider } = await import("@/components/BoardSlider");
+const { default: BoardSlider } = await import("@/components/BoardSlider/index");
 
 describe("Board Slider component", () => {
     test("awaits data and renders correctly", async () => {
