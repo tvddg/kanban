@@ -24,7 +24,9 @@ export default function BoardCard({ id, name, createdAt }: BoardCardProps) {
     const [isPending, setIsPending] = useState(false);
 
     const formattedCreatedAt = formatDateString(createdAt);
-    return <div className="relative min-w-0 flex justify-between p-6 pt-8 pb-8 md:min-w-96 h-40 rounded-xl bg-linear-to-b from-gray-900 to-gray-800 shadow-xl">
+    return <div 
+        data-testid={`boardCardWrapper`}
+        className="relative min-w-0 flex justify-between p-6 pt-8 pb-8 md:min-w-96 h-40 rounded-xl bg-linear-to-b from-gray-900 to-gray-800 shadow-xl">
         {
             isPending
             ? <div className="absolute inset-0 flex items-center justify-center">

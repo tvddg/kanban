@@ -35,7 +35,7 @@ export default function DropdownMenu(
         };
     }, [menuRef, closeMenu])
 
-    return <div ref={menuRef} className="absolute right-0 top-0">
+    return <div data-testid="dropdownMenu" ref={menuRef} className="absolute right-0 top-0">
         <div className="w-32 p-2 flex flex-col gap-1.5 md:gap-3 md:text-2xl text-xl rounded-xl bg-gray-800">
             {
                 items.map(item => 

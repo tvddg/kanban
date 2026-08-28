@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 
 const TEST_TIMESTAMP = Date.now();
 
+test.describe.configure({ mode: "serial" });
+
 test('navigates to the home page', async ({ page }) => {
     await page.goto("/");
 
@@ -70,4 +72,60 @@ test('creates new board using "create new board" panel', async ({ page }) => {
 
     expect(page.url()).toContain("/board/");
     await expect(page.getByText(`Test Board ${TEST_TIMESTAMP}`)).toBeVisible();
+});
+
+// test that deletes board successfully
+test("deletes board successfully", async ({ page }) => {
+    await page.goto("/");
+
+    // choose a board and open the menu
+    // selector - boardCardWrapper, that's not wrapping boardCard-1 
+    const boardToDelete = page.locator('[data-testid="boardCardWrapper"]:not(:has([data-testid="boardCard-1"]))');
+    await expect(boardToDelete).toBeVisible();
+    const settingsIcon = boardToDelete.getByAltText("Settings icon");
+    await expect(settingsIcon).toBeVisible();
+    await settingsIcon.click();
+
+    // check that everything rendered
+    const menu = boardToDelete.getByTestId("dropdownMenu");
+    await expect(menu).toBeVisible();
+    await menu.click();
+    await expect(
+        menu.getByText(/delete/i)
+    ).toBeVisible();
+    await expect(
+        menu.getByText(/rename/i)
+    ).toBeVisible();
+
+    // press "delete" option in menu
+    const deleteBtn = menu.getByText(/delete/i);
+    deleteBtn.click();
+
+    // check that loader is rendered
+    const loader = boardToDelete.getByRole("status");
+    await expect(loader).toBeVisible();
+
+    // check that board is removed from ui
+    await expect(
+        page.getByText(`Test Board ${TEST_TIMESTAMP}`)
+    ).not.toBeVisible();
+});
+
+// test that renames board successfully
+test("renames board successfully", async ({ page }) => {
+    await page.goto("/");
+
+    // choose the board and open the menu
+
+    // check that everything rendered
+
+    // choose the "rename" option in menu
+
+    // check that form was rendered
+
+    // fill and submit the form
+
+    // check that loader is rendered
+
+    // check that board's name is updated
 });
