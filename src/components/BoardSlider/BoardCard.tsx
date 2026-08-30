@@ -5,10 +5,10 @@ import formatDateString from "@/utils/formatters/formatDateString";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Activity, useState } from "react";
-import DropdownMenu from "../DropdownMenu/DropdownMenu";
-import Loader from "../UI/Loader";
+import DropdownMenu from "@/components/DropdownMenu/DropdownMenu";
+import Loader from "@/components/UI/Loader";
 import { cbDeleteBoard } from "./handlers/deleteBoard";
-import RenameBoard from "../modals/RenameBoard";
+import RenameBoard from "@/components/modals/RenameBoard";
 
 interface BoardCardProps {
     id: BoardId;
