@@ -15,7 +15,7 @@ concurrency:
 jobs:
     build-and-push:
         environment: ${{ vars.PROD_ENV }}
-        name: Build
+        name: Build and push
         runs-on: ubuntu-latest
         timeout-minutes: 15
 
