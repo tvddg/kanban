@@ -1,7 +1,7 @@
 import { ListAction } from "../../actions";
 import { BoardId, ListId } from "@/types/brands";
-import { createList } from "@/lib/supabase/queries";
-import showToastError from "@/utils/showToastError";
+import { createList } from "@/lib/supabase/queries/list";
+import showToastError from "@/utils/toasts/showToastError";
 import { TransitionStartFunction } from "react";
 
 interface UtilityFunctions {

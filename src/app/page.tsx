@@ -1,5 +1,11 @@
+import BoardSlider from "@/components/BoardSlider";
+import Header from "@/components/UI/Header";
+
 export default function Home() {
     return (
-        <h1>INITIALIZE PROJECT AND CLEAN UP</h1>
+        <>
+            <Header name="Kanban Tracker" />
+            <BoardSlider />
+        </>
     );
 }

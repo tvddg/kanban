@@ -1,7 +1,7 @@
 import { UnitedHandlers } from "@/hooks/useOptimisticLists/handlers";
 import { ListWithCards } from "@/types";
 import { CardId, ListId } from "@/types/brands";
-import computeCardPlacement from "@/utils/computeCardPlacement";
+import computeCardPlacement from "@/utils/computingHelpers/computeCardPlacement";
 import { DragOverEvent } from "@dnd-kit/react";
 import { isSortable } from "@dnd-kit/react/sortable";
 

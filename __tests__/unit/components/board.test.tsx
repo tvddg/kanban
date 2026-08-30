@@ -1,29 +1,43 @@
 import { BoardId, CardId, ListId } from "@/types/brands";
 import { render, screen } from "@testing-library/react";
-import Board from "@/components/Board";
+import { ListWithCards } from "@/types";
+import { jest } from "@jest/globals";
+
+const boardLists: ListWithCards[] = [
+    {
+        board_id: 1 as BoardId,
+        created_at: "2026-08-14",
+        id: 1 as ListId,
+        name: "Test list",
+        cards: [{
+            created_at: "2026-08-14",
+            description: null,
+            title: "Test card",
+            id: 1 as CardId,
+            list_id: 1 as ListId,
+            position: 1
+        }],
+        position: 1
+    }
+];
+
+jest.unstable_mockModule("@/hooks/useOptimisticLists", () => ({
+    __esModule: true,
+    default: () => ({
+        optimisticLists: boardLists,
+        handlers: {},
+        refreshLists: () => {}
+    })
+}));
+
+const { default: Board } = await import("@/components/Board");
 
 beforeEach(() => {
-    render(<Board 
+    render(<Board
         id={1}
-        boardLists={[
-            {
-                board_id: 1 as BoardId,
-                created_at: "2026-08-14",
-                id: 1 as ListId,
-                name: "Test list",
-                cards: [{
-                    created_at: "2026-08-14",
-                    description: null,
-                    title: "Test card",
-                    id: 1 as CardId,
-                    list_id: 1 as ListId,
-                    position: 1
-                }],
-                position: 1
-            }
-        ]} 
+        boardLists={boardLists}
     />)
-}); 
+});
 
 describe("Board component", () => {
     test("renders board with proper content", () => {

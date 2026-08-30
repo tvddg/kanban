@@ -2,7 +2,7 @@ import { ListWithCards } from "@/types";
 import { useOptimistic, useState, useTransition } from "react";
 import rootReducer from "./reducers";
 import getAllHandlers from "./handlers";
-import { getBoard } from "@/lib/supabase/queries";
+import { getBoard } from "@/lib/supabase/queries/board";
 import { CardAction, ListAction } from "./actions";
 
 interface UseOptimisticListsProps {

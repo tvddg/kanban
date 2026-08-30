@@ -1,4 +1,4 @@
-import computeCardPlacement from "@/utils/computeCardPlacement";
+import computeCardPlacement from "@/utils/computingHelpers/computeCardPlacement";
 import { ICard } from "@/types";
 import { CardId, ListId } from "@/types/brands";
 
