@@ -56,6 +56,6 @@ jobs:
                 labels: ${{ steps.meta.outputs.labels }}
                 secret-envs: |
                   supabaseUrl=NEXT_PUBLIC_SUPABASE_URL
-                  supabaseKey=NEXT_PUBLIC_ANON_KEY
+                  supabaseKey=NEXT_PUBLIC_SUPABASE_ANON_KEY
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
