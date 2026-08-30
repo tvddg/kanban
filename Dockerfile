@@ -12,7 +12,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN --mount=type=secret,id=supabaseUrl,env=NEXT_PUBLIC_SUPABASE_URL \
-    --mount=type=secret,id=supabaseKey,env=NEXT_PUBLIC_ANON_KEY \
+    --mount=type=secret,id=supabaseKey,env=NEXT_PUBLIC_SUPABASE_ANON_KEY \
     npm run build
 
 FROM base AS runner
