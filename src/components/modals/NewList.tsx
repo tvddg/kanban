@@ -30,12 +30,12 @@ export default function NewList({ createList }: NewListProps) {
                 ? <form 
                     name="New list form"
                     aria-label="New list form"
-                    className="flex flex-col items-start gap-4 text-xl"
+                    className="flex flex-col justify-center items-center gap-4 text-xl"
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <input
                         {...register('name', { required: true })}
-                        className="outline-none border-2 border-white/20 rounded-xl p-1.5 backdrop-blur-xl shadom-md"
+                        className="outline-none border-2 border-white/20 max-w-full rounded-xl p-1.5 backdrop-blur-xl shadom-md"
                         placeholder="Type in name of the list"
                     />
                     <div className="flex justify-between w-full">
