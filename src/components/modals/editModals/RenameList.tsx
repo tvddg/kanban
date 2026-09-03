@@ -18,9 +18,10 @@ export default function RenameList({ initialValue, renameList, closeForm }: Rena
         defaultValues: { name: initialValue }
     });
 
-    useEffect(() => setFocus('name'), []);
+    useEffect(() => setFocus('name'), [setFocus]);
 
-    const { onBlur: rhfOnBlur, ...restRegistration } = register('name', { required: true }); 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { onBlur: _, ...restRegistration } = register('name', { required: true }); 
     const onBlur = () => {
         closeForm();
         reset();
