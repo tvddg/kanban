@@ -24,7 +24,7 @@ export default function Board({ id, boardLists }: BoardProps) {
                 commitCardPosition: handlers.commitCardPosition
             }}
         >
-            <section className="flex items-start text-2xl min-h-0 max-h-full overflow-x-scroll scrollbar-none content-start">
+            <section className="flex items-start text-2xl min-h-full max-h-full overflow-x-scroll scrollbar-none content-start">
                 {
                     optimisticLists.map(list =>
                         <List
