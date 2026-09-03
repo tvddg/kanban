@@ -20,9 +20,10 @@ export interface ListProps {
     handleDeleteCard: (cardId: CardId) => void;
     handleEditCard: (cardId: CardId, title: string) => void;
     handleDeleteList: () => void;
+    handleRenameList: (name: string) => void;
 }
 
-export default function List({ id, name, cards, handleAddCard, handleDeleteCard, handleEditCard, handleDeleteList }: ListProps) {
+export default function List({ id, name, cards, handleAddCard, handleDeleteCard, handleEditCard, handleDeleteList, handleRenameList }: ListProps) {
     const { ref } = useDroppable({
         id,
         type: "list"
@@ -49,9 +50,10 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard,
             {
                 isRenamingList 
                 ? <RenameList
-                     id={id}
-                     initialValue={name}
-                     closeForm={() => setIsRenamingList(false)}
+                    id={id}
+                    initialValue={name}
+                    closeForm={() => setIsRenamingList(false)}
+                    renameList={handleRenameList}
                 />
                 : <h2 className="ml-0.5 font-medium">{name}</h2>
             }

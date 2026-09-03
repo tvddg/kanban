@@ -36,6 +36,7 @@ export default function Board({ id, boardLists }: BoardProps) {
                             handleDeleteCard={(cardId: CardId) => handlers.deleteCard({ listId: list.id, cardId })}
                             handleEditCard={(cardId: CardId, title: string) => handlers.editCard({ listId: list.id, cardId, title })}
                             handleDeleteList={() => handlers.deleteList({ id: list.id })}
+                            handleRenameList={(name: string) => handlers.renameList({ id: list.id, name })}
                         />
                     )
                 }
