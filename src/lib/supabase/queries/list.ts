@@ -1,4 +1,4 @@
-import { INewList } from "@/types";
+import { IListUpdate, INewList } from "@/types";
 import { BoardId, ListId } from "@/types/brands";
 import client from "../client";
 
@@ -26,5 +26,18 @@ export async function deleteList(id: ListId) {
 
     if (error) {
         throw new Error(`Could not delete list ${id}`);
+    }
+}
+
+export async function renameList(id: ListId, name: string) {
+    const updatedList: IListUpdate = { name };
+    
+    const { error } = await client
+        .from("lists")
+        .update(updatedList)
+        .eq('id', id);
+
+    if (error) {
+        throw new Error(`Could not rename list ${id}`);
     }
 }

@@ -18,7 +18,7 @@ export default function RenameList({ id, initialValue, closeForm }: RenameListPr
     setFocus('name');
 
     const onSubmit = () => {
-        // TODO
+        
     };
 
     return <form onSubmit={handleSubmit(onSubmit)} name="Rename list form" aria-label="Rename list form">
