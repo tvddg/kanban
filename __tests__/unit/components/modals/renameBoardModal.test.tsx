@@ -8,7 +8,7 @@ jest.unstable_mockModule("@/lib/supabase/queries/board", () => ({
         console.log(`RENAME BOARD ${id} TO ${newName}`))
 }));
 
-const {default: RenameBoard} = await import("@/components/modals/RenameBoard");
+const {default: RenameBoard} = await import("@/components/modals/editModals/RenameBoard");
 
 beforeEach(() => {
     render(

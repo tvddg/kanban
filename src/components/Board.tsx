@@ -4,7 +4,7 @@ import List from "./List";
 import { BoardId, CardId } from "@/types/brands";
 import { ListWithCards } from "@/types";
 import useOptimisticLists from "@/hooks/useOptimisticLists";
-import NewList from "./modals/NewList";
+import NewList from "./modals/newModals/NewList";
 import DndCardsProvider from "./providers/DndCardsProvider";
 
 interface BoardProps {
