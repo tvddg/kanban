@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import List from "@/components/List";
 import { CardId, ListId } from "@/types/brands";
 import { ICard } from "@/types";
@@ -25,25 +25,26 @@ const cards: ICard[] = [
 
 describe("List component", () => {
     test("renders correctly when no cards provided", () => {
-        render(<List 
-                id={1 as ListId}
-                name="Test list"
-                cards={[]}
-                handleAddCard={() => {}}
-                handleDeleteCard={() => {}}
-                handleEditCard={() => {}}
-                handleDeleteList={() => {console.log(`DELETED LIST 1`)}}
-            />)
-        
+        render(<List
+            id={1 as ListId}
+            name="Test list"
+            cards={[]}
+            handleAddCard={() => { }}
+            handleDeleteCard={() => { }}
+            handleEditCard={() => { }}
+            handleDeleteList={() => { console.log(`DELETED LIST 1`) }}
+            handleRenameList={(name: string) => { console.log(`RENAMED LIST 1 TO ${name}`) }}
+        />)
+
         const headerElement = screen.getByRole('banner');
         expect(headerElement).toBeInTheDocument();
 
-        const titleElement= screen.getByRole('heading');
+        const titleElement = screen.getByRole('heading');
         expect(titleElement).toBeInTheDocument();
         expect(titleElement).toHaveTextContent("Test list");
 
-        const deleteIcon = screen.getByAltText("Delete list icon");
-        expect(deleteIcon).toBeInTheDocument();
+        const menuIcon = screen.getByAltText("List settings icon");
+        expect(menuIcon).toBeInTheDocument();
 
         const fallbackElement = screen.getByText(/nothing here yet/i);
         expect(fallbackElement).toBeInTheDocument();
@@ -55,14 +56,15 @@ describe("List component", () => {
     })
     describe("with cards", () => {
         beforeEach(() => {
-            render(<List 
+            render(<List
                 id={1 as ListId}
                 name="Test list"
                 cards={cards}
-                handleAddCard={() => {}}
-                handleDeleteCard={() => {}}
-                handleEditCard={() => {}}
-                handleDeleteList={() => {console.log(`DELETED LIST 1`)}}
+                handleAddCard={() => { }}
+                handleDeleteCard={() => { }}
+                handleEditCard={() => { }}
+                handleDeleteList={() => { console.log(`DELETED LIST 1`) }}
+                handleRenameList={(name: string) => { console.log(`RENAMED LIST 1 TO ${name}`) }}
             />)
         });
 
@@ -83,18 +85,114 @@ describe("List component", () => {
             expect(addCardButton).toBeInTheDocument();
         });
 
-        test("able to be deleted", () => {
-            const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+        describe("has working dropdown menu", () => {
+            test(`menu contains "delete" button`, () => {
+                const logSpy = jest.spyOn(console, "log").mockImplementation(() => { });
 
-            const headerElement = screen.getByRole("banner");
-            expect(headerElement).toBeInTheDocument();
+                const headerElement = screen.getByRole("banner");
+                expect(headerElement).toBeInTheDocument();
 
-            const deleteButton = within(headerElement).getByRole("img");
-            expect(deleteButton).toBeInTheDocument();
+                const menuButton = within(headerElement).getByRole("img");
+                expect(menuButton).toBeInTheDocument();
+                expect(menuButton).toHaveAttribute('alt', 'List settings icon');
 
-            fireEvent.click(deleteButton);
+                fireEvent.click(menuButton);
 
-            expect(logSpy).toHaveBeenCalledWith("DELETED LIST 1");
+                const menu = screen.getByTestId("dropdownMenu");
+
+                expect(
+                    within(menu).getByAltText("Menu item: Delete")
+                ).toBeInTheDocument();
+                const deleteOption = within(menu).getByText(/delete/i);
+                fireEvent.click(deleteOption);
+
+                expect(logSpy).toHaveBeenCalledWith("DELETED LIST 1");
+            });
+
+            describe(`menu contains "rename" button`, () => {
+                test(`"rename" option is present`, () => {
+                    const headerElement = screen.getByRole("banner");
+
+                    const menuButton = within(headerElement).getByRole("img");
+                    expect(menuButton).toHaveAttribute('alt', 'List settings icon');
+
+                    fireEvent.click(menuButton);
+
+                    const menu = screen.getByTestId("dropdownMenu");
+                    expect(
+                        within(menu).getByAltText("Menu item: Rename")
+                    ).toBeInTheDocument();
+                    expect(
+                        within(menu).getByText(/rename/i)
+                    ).toBeInTheDocument();
+                });
+
+                test(`opens the form when "rename" option is clicked`, () => {
+                    const headerElement = screen.getByRole("banner");
+                    const menuButton = within(headerElement).getByRole("img");
+                    fireEvent.click(menuButton);
+
+                    const menu = screen.getByTestId("dropdownMenu");
+                    const renameOption = within(menu).getByText(/rename/i);
+                    fireEvent.click(renameOption);
+
+                    // form is visible
+                    const formElement = within(headerElement).getByRole("form");
+                    const inputElement: HTMLInputElement = within(formElement).getByRole("textbox");
+                    expect(inputElement.value).toBe("Test list");
+                });
+
+                test("form is submitted successfully", async () => {
+                    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+                    fireEvent.click(
+                        screen.getByAltText("List settings icon")
+                    );
+                    fireEvent.click(
+                        within(screen.getByTestId("dropdownMenu"))
+                            .getByText(/rename/i)
+                    );
+
+                    // fill the form
+                    const form = screen.getByRole("form");
+                    const input: HTMLInputElement = within(form)
+                        .getByRole("textbox");
+                    fireEvent.change(input, { target: { value: "TEST"} });
+
+                    expect(input.value).toBe("TEST");
+                    
+                    // submit the form
+                    await act(() => fireEvent.submit(form));
+
+                    expect(form).not.toBeInTheDocument();
+                    expect(logSpy).toHaveBeenCalledTimes(1);
+                    expect(logSpy).toHaveBeenCalledWith("RENAMED LIST 1 TO TEST");
+                });
+                
+                test("form is not submitted if input is empty", async () => {
+                    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+                    fireEvent.click(
+                        screen.getByAltText("List settings icon")
+                    );
+                    fireEvent.click(
+                        within(screen.getByTestId("dropdownMenu"))
+                            .getByText(/rename/i)
+                    );
+
+                    // fill the form
+                    const form = screen.getByRole("form");
+                    const input: HTMLInputElement = within(form)
+                        .getByRole("textbox");
+                    fireEvent.change(input, { target: { value: ""} });
+
+                    expect(input.value).toBe("");
+                    
+                    // submit the form
+                    await act(() => fireEvent.submit(form));
+
+                    expect(form).toBeInTheDocument();
+                    expect(logSpy).toHaveBeenCalledTimes(0);
+                });
+            });
         });
 
         describe("supports card adding", () => {

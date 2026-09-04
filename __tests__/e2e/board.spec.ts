@@ -160,17 +160,93 @@ test("creates a new list", async ({ page }) => {
 
 test("deletes existing list", async ({ page }) => {
     await page.goto("/board/15");
+    await expect(page.getByText("Test Board")).toBeVisible();
 
-    const listTitle = page.getByText(`Test list ${TEST_TIMESTAMP}`);
-    await expect(listTitle).toBeVisible();
+    // get new list from previous test
+    const listToDelete = page.locator(`[data-testid^="li_"]`, {
+        has: page.locator('header', {
+            has: page.getByText(`Test list ${TEST_TIMESTAMP}`, { exact: true })
+        })
+    })
+    await expect(listToDelete).toBeVisible();
+    await expect(
+        listToDelete.getByText(`Test list ${TEST_TIMESTAMP}`)
+    ).toBeVisible();
 
-    const header = page.locator("header", { has: listTitle });
-    await expect(header).toBeVisible();
+    // open the menu and delete it
+    const menuIcon = listToDelete.getByAltText("List settings icon");
+    await expect(menuIcon).toBeVisible();
+    await menuIcon.click();
 
-    const deleteButton = header.getByAltText("Delete list icon");
-    await expect(deleteButton).toBeVisible();
+    const menu = listToDelete.getByTestId("dropdownMenu");
+    await expect(menu).toBeVisible();
 
-    await deleteButton.click();
+    const deleteOption = menu.getByText(
+        "Delete", { exact: true }
+    );
+    await expect(deleteOption).toBeVisible();
+    await expect(
+        menu.getByAltText("Menu item: Delete", { exact: true })
+    ).toBeVisible();
 
-    await expect(page.getByText(`Test list ${TEST_TIMESTAMP}`)).not.toBeVisible();
+    await deleteOption.click();
+
+    // check that it has disappeared
+    await expect(
+        page.getByText(`Test list ${TEST_TIMESTAMP}`, 
+            { exact: true })
+    ).not.toBeVisible();
+});
+
+test("renames existing list", async ({ page }) => {
+    await page.goto("/board/15");
+
+    // get first list
+    const listToRename = page.getByTestId("li_59");
+    await expect(listToRename).toBeVisible();
+
+    // open the menu
+    const menuIcon = listToRename.getByAltText("List settings icon");
+    await expect(menuIcon).toBeVisible();
+    await menuIcon.click();
+
+    const menu = listToRename.getByTestId("dropdownMenu");
+    await expect(menu).toBeVisible();
+
+    // find the rename option and click on it
+    const renameOption = menu.getByText("Rename");
+    await expect(renameOption).toBeVisible();
+    await expect(
+        menu.getByAltText("Menu item: Rename")
+    ).toBeVisible();
+
+    await renameOption.click();
+
+    // check that the form appeared
+    const form = listToRename.getByRole("form");
+    await expect(form).toBeVisible();
+
+    const input = form.getByRole("textbox");
+    await expect(input).toBeVisible();
+    await expect(input).toHaveValue("Test List 1")
+
+    // fill the form
+    await input.fill("Testing rename function");
+    await expect(input).toHaveValue("Testing rename function");
+
+    // submit it with pressing "Enter" key
+    await input.press('Enter');
+
+    // check that the form disappeared
+    await expect(
+        listToRename.getByRole("form")
+    ).not.toBeVisible();
+
+    // check that name has been changed
+    await expect(
+        listToRename.getByText("Test List 1", { exact: true })
+    ).not.toBeVisible();
+    await expect(
+        listToRename.getByText("Testing rename function", { exact: true })
+    ).toBeVisible();
 });
