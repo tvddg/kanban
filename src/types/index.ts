@@ -13,6 +13,7 @@ export type ICard = Rebrand<Tables<'cards'>, { id: CardId, list_id: ListId }>
 export type INewCard = Rebrand<TablesInsert<'cards'>, { list_id: ListId }>;
 export type ICardUpdate = Rebrand<TablesUpdate<'cards'>, { list_id: ListId }>;
 export type INewList = Rebrand<TablesInsert<'lists'>, { board_id: BoardId }>;
+export type IListUpdate = Rebrand<TablesUpdate<'lists'>, { board_id?: BoardId }>;
 export type INewBoard = TablesInsert<'boards'>;
 export type IBoardUpdate = TablesUpdate<'boards'>;
 

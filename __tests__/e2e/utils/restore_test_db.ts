@@ -15,6 +15,11 @@ export const RESTORE_BOARDS = async () => {
 export const RESTORE_LISTS = async () => {
     await client
         .from("lists")
+        .update({ name: "Test List 1" })
+        .eq("id", 59);
+
+    await client
+        .from("lists")
         .delete()
         .gt("id", 61);
 

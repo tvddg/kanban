@@ -1,4 +1,4 @@
-import NewList from "@/components/modals/NewList"
+import NewList from "@/components/modals/newModals/NewList"
 import { render, screen, within, fireEvent, act } from "@testing-library/react"
 import { jest } from "@jest/globals";
 

@@ -16,7 +16,7 @@ jest.unstable_mockModule("next/navigation", () => ({
     }})
 }));
 
-const { default: NewBoard } = await import("@/components/modals/NewBoard");
+const { default: NewBoard } = await import("@/components/modals/newModals/NewBoard");
 
 beforeEach(() => {
     render(<NewBoard />);

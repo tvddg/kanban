@@ -1,5 +1,5 @@
 import BoardCard from "./BoardCard";
-import NewBoard from "../modals/NewBoard";
+import NewBoard from "../modals/newModals/NewBoard";
 import { getAllBoards } from "@/lib/supabase/queries/board";
 
 export default async function BoardSlider() {

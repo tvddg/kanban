@@ -47,6 +47,12 @@ export type ListAction = {
     payload: {
         id: ListId
     }
+} | {
+    type: "RENAME_LIST",
+    payload: {
+        id: ListId,
+        name: string
+    }
 }
 
 // TYPE GUARDS for actions
@@ -74,7 +80,8 @@ export function isListAction(action: { type: string, payload: object }): action 
 
     const listActionTypes: Record<ListAction["type"], boolean> = {
         CREATE_LIST: true,
-        DELETE_LIST: true
+        DELETE_LIST: true,
+        RENAME_LIST: true
     };
 
     return action.type in listActionTypes;

@@ -3,11 +3,13 @@
 import { CardId, ListId } from "@/types/brands";
 import Card from "./Card";
 import { useDroppable } from "@dnd-kit/react";
-import { useState } from "react";
-import NewCard from "./modals/NewCard";
+import { Activity, useState } from "react";
+import NewCard from "./modals/newModals/NewCard";
 import { ICard } from "@/types";
 
 import Image from "next/image";
+import DropdownMenu from "./DropdownMenu/DropdownMenu";
+import RenameList from "./modals/editModals/RenameList";
 
 export interface ListProps {
     id: ListId;
@@ -18,9 +20,10 @@ export interface ListProps {
     handleDeleteCard: (cardId: CardId) => void;
     handleEditCard: (cardId: CardId, title: string) => void;
     handleDeleteList: () => void;
+    handleRenameList: (name: string) => void;
 }
 
-export default function List({ id, name, cards, handleAddCard, handleDeleteCard, handleEditCard, handleDeleteList }: ListProps) {
+export default function List({ id, name, cards, handleAddCard, handleDeleteCard, handleEditCard, handleDeleteList, handleRenameList }: ListProps) {
     const { ref } = useDroppable({
         id,
         type: "list"
@@ -35,19 +38,51 @@ export default function List({ id, name, cards, handleAddCard, handleDeleteCard,
     }
 
     const [cardModalVisible, setCardModalVisible] = useState(false);
+    const [listModalVisible, setListModalVisible] = useState(false);
+
+    const [isRenamingList, setIsRenamingList] = useState(false);
 
     return <div ref={cards.length === 0 ? ref : null}
-        className="flex flex-col gap-8 ml-4 shrink-0 grow-0 overflow-clip bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-full shadow-xl"
+        className="relative flex flex-col gap-8 ml-4 shrink-0 grow-0 overflow-clip bg-linear-to-b from-gray-900 to-gray-800 p-4 rounded-xl w-74 max-w-76 min-h-0 max-h-full shadow-xl"
         data-testid={`li_${id}`}
     >
         <header className="flex shrink-0 justify-between items-center rounded-xl h-fit max-h-7">
-            <h2 className="ml-0.5 font-medium">{name}</h2>
-            <Image alt="Delete list icon" className="cursor-pointer hover:scale-103 duration-75"
-                src="/delete_icon.svg"
+            {
+                isRenamingList 
+                ? <RenameList
+                    id={id}
+                    initialValue={name}
+                    closeForm={() => setIsRenamingList(false)}
+                    renameList={handleRenameList}
+                />
+                : <h2 className="ml-0.5 font-medium">{name}</h2>
+            }
+            <Image alt="List settings icon" className="cursor-pointer hover:scale-103 duration-75"
+                src="/settings_icon.svg"
                 width="40" height="40"
-                onClick={() => handleDeleteList()}
+                onClick={() => setListModalVisible(true)}
             />
         </header>
+        <Activity mode={listModalVisible ? "visible" : "hidden"}>
+            <DropdownMenu 
+                items={[
+                    {
+                        name: "Delete",
+                        callback: () => handleDeleteList(),
+                        imagePath: "/delete_icon.svg"
+                    },
+                    {
+                        name: "Rename",
+                        callback: () => { 
+                            setListModalVisible(false);
+                            setIsRenamingList(true); 
+                        },
+                        imagePath: "/edit_icon.svg"
+                    }
+                ]}
+                closeMenu={() => setListModalVisible(false)}
+            />
+        </Activity>
         <div className="text-lg flex flex-col gap-6 scrollbar-thumb-gray-700 shrink grow min-h-0 overflow-auto">
             {
                 cards.length !== 0
